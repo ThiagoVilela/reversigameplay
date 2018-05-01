@@ -42,109 +42,150 @@ public class Board {
 
 	/*** Verifica toda a direção de uma coordenada (em relação a outra) até encontrar uma peça aliada ***/
 	public boolean findAllies(int x, int y, char alliedCell, ArrayList<Coordinate> badNeighbors, Cell[][] matrix) {
+		System.out.println("ENTREI NA FIND ALLIES COM (" + x + "," + y + ")");
 		for (int i = 0; i < badNeighbors.size(); i++) {
 			/* Diagonal superior esquerda */
 			if (badNeighbors.get(i).x == x-1 && badNeighbors.get(i).y == y-1) {
 				System.out.println("Encontrei ["+badNeighbors.get(i).x + "]["+badNeighbors.get(i).y+"] na Diagonal superior esquerda");
 				/* Busca direcionada na diagonal superior esquerda */
-				for (int j = badNeighbors.get(i).y; j >= 0; j--) {
-					if (matrix[j][j].content == alliedCell) {
-						System.out.println("Encontrei um aliado na diagonal superior esquerda ["+j+"]["+j+"]");
+				boolean isVirgin = true;
+				for (int j = 1; x-j >= 0 && y-j >= 0; j++) {
+					if (matrix[x-j][y-j].content == '_' && isVirgin == false) {
+						j = SIZE;
+					}
+					else if (matrix[x-j][y-j].content == alliedCell) {
+						System.out.println("Encontrei um aliado na diagonal superior esquerda ["+(x-j)+"]["+(y-j)+"]");
 						/* Quebra da condição ao achar um elemento aliado */
-						j = -1;
+						j = SIZE;
 						return true;
 					}
+					isVirgin = false;
 				}
 			}
 			/* Esquerda */
 			else if(badNeighbors.get(i).x == x-0 && badNeighbors.get(i).y == y-1) {
 				System.out.println("Encontrei ["+badNeighbors.get(i).x + "]["+badNeighbors.get(i).y+"] esquerda");
 				/* Busca direcionada na esquerda */
-				for (int j = badNeighbors.get(i).y; j >= 0; j--) {
-					if (matrix[badNeighbors.get(i).x][j].content == alliedCell) {
+				boolean isVirgin = true;
+				for (int j = y; j >= 0; j--) {
+					if(matrix[x][j].content == '_' && isVirgin == false) {
+						j = -1;
+					}
+					else if (matrix[x][j].content == alliedCell) {
 						System.out.println("Encontrei um aliado na esquerda ["+badNeighbors.get(i).x+"]["+j+"]");
 						/* Quebra da condição ao achar um elemento aliado */
 						j = -1;
 						return true;
 					}
+					isVirgin = false;
 				}
 			}
 			/* Diagonal inferior esquerda */
 			else if(badNeighbors.get(i).x == x+1 && badNeighbors.get(i).y == y-1) {
 				System.out.println("Encontrei [" + badNeighbors.get(i).x + "][" +badNeighbors.get(i).y+ "]  inferior esquerda");
 				/* Busca direcionada na diagonal inferior esquerda */
-				for (int j = 1; (badNeighbors.get(i).y-j >= 0) && (badNeighbors.get(i).x+j < SIZE); j++) {
-					if (matrix[badNeighbors.get(i).x+j][badNeighbors.get(i).y-j].content == alliedCell) {
-						System.out.println("Encontrei um aliado na diagonal inferior esquerda ["+(badNeighbors.get(i).x+j)+"]["+(badNeighbors.get(i).y-j)+"]");
+				boolean isVirgin = true;
+				for (int j = 1; (x+j < SIZE) && (y-j >= 0); j++) {
+					if(matrix[x+j][y-j].content == '_' && isVirgin == false) {
+						j = y+1;
+					}
+					else if (matrix[x+j][y-j].content == alliedCell) {
+						System.out.println("Encontrei um aliado na diagonal inferior esquerda ["+(x+j)+"]["+(y-j)+"]");
 						/* Quebra da condição ao achar um elemento aliado */
-						j = badNeighbors.get(i).y +1;
+						j = y +1;
 						return true;
 					}
+					isVirgin = false;
 				}
 			}
 			/* Baixo */
 			else if(badNeighbors.get(i).x == x+1 && badNeighbors.get(i).y == y-0) {
 				System.out.println("Encontrei [" + badNeighbors.get(i).x + "][" +badNeighbors.get(i).y+ "] abaixo");
 				/* Busca direcionada pra baixo */
-				for (int j = badNeighbors.get(i).x; j < SIZE; j++) {
-					if (matrix[j][badNeighbors.get(i).y].content == alliedCell) {
-						System.out.println("Encontrei um aliado embaixo ["+j+"]["+badNeighbors.get(i).y+"]");
+				boolean isVirgin = true;
+				for (int j = x; j < SIZE; j++) {
+					if(matrix[j][y].content == '_' && isVirgin == false) {
+						j = SIZE;
+					}
+					else if (matrix[j][y].content == alliedCell) {
+						System.out.println("Encontrei um aliado embaixo ["+j+"]["+y+"]");
 						/* Quebra da condição ao achar um elemento aliado */
 						j = SIZE;
 						return true;
 					}
+					isVirgin = false;
 				}
 			}
 			/* Diagonal inferior direita */
 			else if(badNeighbors.get(i).x == x+1 && badNeighbors.get(i).y == y+1) {
 				System.out.println("Encontrei [" + badNeighbors.get(i).x + "][" +badNeighbors.get(i).y+ "] Diagonal inferior direita");
 				/* Busca direcionada na diagonal inferior direita */
-				for (int j = badNeighbors.get(i).y; j < SIZE; j++) {
-					if (matrix[j][j].content == alliedCell) {
-						System.out.println("Encontrei um aliado na diagonal inferior direita ["+j+"]["+j+"]");
+				boolean isVirgin = true;
+				for (int j = 1; x+j < SIZE && y+j < SIZE; j++) {
+					if(matrix[x+j][y+j].content == '_' && isVirgin == false) {
+						j = SIZE;
+					}
+					else if (matrix[x+j][y+j].content == alliedCell) {
+						System.out.println("Encontrei um aliado na diagonal inferior direita ["+(x+j)+"]["+(y+j)+"]");
 						/* Quebra da condição ao achar um elemento aliado */
 						j = SIZE;
 						return true;
 					}
+					isVirgin = false;
 				}
 			}
 			/* Direita */
 			else if(badNeighbors.get(i).x == x-0 && badNeighbors.get(i).y == y+1) {
 				System.out.println("Encontrei ["+badNeighbors.get(i).x + "]["+badNeighbors.get(i).y+"] na direita");
 				/* Busca direcionada na direita */
-				for (int j = badNeighbors.get(i).y; j < SIZE; j++) {
-					if (matrix[badNeighbors.get(i).x][j].content == alliedCell) {
-						System.out.println("Encontrei um aliado na direita ["+badNeighbors.get(i).x+"]["+j+"]");
+				boolean isVirgin = true;
+				for (int j = y; j < SIZE; j++) {
+					if(matrix[x][j].content == '_' && isVirgin == false) {
+						j = SIZE;
+					}
+					else if (matrix[x][j].content == alliedCell) {
+						System.out.println("Encontrei um aliado na direita ["+x+"]["+j+"]");
 						/* Quebra da condição ao achar um elemento aliado */
 						j = SIZE;
 						return true;
 					}
+					isVirgin = false;
 				}
 			}
 			/* Diagonal superior direita */
 			else if(badNeighbors.get(i).x == x-1 && badNeighbors.get(i).y == y+1) {
 				System.out.println("Encontrei [" + badNeighbors.get(i).x + "][" +badNeighbors.get(i).y+ "] Diagonal superior direita");
 				/* Busca direcionada na diagonal superior direita */
-				for (int j = 1; (badNeighbors.get(i).x-j >= 0) && (badNeighbors.get(i).y+j < SIZE); j++) {
-					if (matrix[badNeighbors.get(i).x-j][badNeighbors.get(i).y+j].content == alliedCell) {
-						System.out.println("Encontrei um aliado na diagonal superior direita ["+(badNeighbors.get(i).x-j)+"]["+(badNeighbors.get(i).y+j)+"]");
+				boolean isVirgin = true;
+				for (int j = 1; (x-j >= 0) && (y+j < SIZE); j++) {
+					if(matrix[x-j][y+j].content == '_' && isVirgin == false) {
+						j = x +1;
+					}
+					else if (matrix[x-j][y+j].content == alliedCell) {
+						System.out.println("Encontrei um aliado na diagonal superior direita ["+(x-j)+"]["+(y+j)+"]");
 						/* Quebra da condição ao achar um elemento aliado */
-						j = badNeighbors.get(i).x +1;
+						j = x +1;
 						return true;
 					}
+					isVirgin = false;
 				}
 			}
 			/* Em cima */
 			else if(badNeighbors.get(i).x == x-1 && badNeighbors.get(i).y == y-0) {
 				System.out.println("Encontrei ["+badNeighbors.get(i).x + "]["+badNeighbors.get(i).y+"] em cima");
 				/* Busca direcionada pra cima */
-				for (int j = badNeighbors.get(i).x; j >= 0; j--) {
-					if (matrix[j][badNeighbors.get(i).y].content == alliedCell) {
-						System.out.println("Encontrei um aliado logo acima ["+j+"]["+badNeighbors.get(i).y+"]");
+				boolean isVirgin = true;
+				for (int j = x; j >= 0; j--) {
+					if(matrix[j][y].content == '_' && isVirgin == false) {
+						j = -1;
+					}
+					else if (matrix[j][y].content == alliedCell) {
+						System.out.println("Encontrei um aliado logo acima ["+j+"]["+y+"]");
 						/* Quebra da condição ao achar um elemento aliado */
 						j = -1;
 						return true;
 					}
+					isVirgin = false;
 				}
 			}
 			/* Erro - não encaixou em nenhum dos casos */
@@ -166,20 +207,25 @@ public class Board {
 				if (this.isEmpty(i, j, board)) {
 					/* Caso a célula tenha inimigos ao seu redor */
 					if (this.hasBadNeighborhood(i, j, enemyCell, board).size() > 0) {
+						System.out.println("ENCONTREI INIMIGOS - VERIFICAR AMIGOS PERTO");
 						/* E possua aliado(s) a frente desse(s) inimigo(s) */
 						if (this.findAllies(i, j, alliedCell, this.hasBadNeighborhood(i, j, enemyCell, board), board)) {
+							System.out.println("VOU ADD ("+i+","+j+")");
 							playableCells.add(new Coordinate(i, j));
+							System.out.println();
 						}
 					}
 				}
 			}
 		}
+		System.out.println("VOU RETORNAR O PLAYABLE");
 		/* Retorna uma lista com todas as posições jogáveis no momento */
 		return playableCells;
 	}
 	
 	/*** Imprime uma lista de possíveis jogadas ***/
-	public void printPlayableCells(ArrayList<Coordinate> playableCells) {
+	public void printPlayableCells(ArrayList<Coordinate> playableCells, Cell[][] board) {
+		this.printBoard(board);
 		if (playableCells.size() > 0) {
 			System.out.println("Possíveis jogadas:");
 			for (int i = 0; i < playableCells.size(); i++) {
@@ -296,24 +342,23 @@ public class Board {
 		board.insertItem(0, 0, 'O', "Humano");
 		
 		/* Inserir a diagonal inferior esquerda para teste */
-		board.insertItem(4, 2, 'X', "Humano");
+		/*board.insertItem(4, 2, 'X', "Humano");
 		board.insertItem(5, 1, 'O', "Humano");
 		board.insertItem(6, 0, 'O', "Humano");
 		
 		/* Inserir a diagonal superior direita para teste */
-		board.insertItem(2, 4, 'X', "Humano");
+		/*board.insertItem(2, 4, 'X', "Humano");
 		board.insertItem(1, 5, 'O', "Humano");
 		board.insertItem(0, 6, 'O', "Humano");
 		
 		/* Inserir a diagonal inferior direita para teste */
-		board.insertItem(4, 4, 'X', "Humano");
+		/*board.insertItem(4, 4, 'X', "Humano");
 		board.insertItem(5, 5, 'X', "Humano");
 		board.insertItem(6, 6, 'O', "Humano");
-		board.insertItem(7, 7, 'O', "Humano");
+		board.insertItem(7, 7, 'O', "Humano");*/
 		
 		board.printBoard(board.getCell());
 		//board.findAllies(2, 5, 'O', board.hasBadNeighborhood(2, 5, 'X', board.getCell()), board.getCell());
-		board.printPlayableCells(board.findPlayableCells(board.getCell(), 'X', 'O'));
-		board.printBoard(board.getCell());
+		board.printPlayableCells(board.findPlayableCells(board.getCell(), 'X', 'O'), board.getCell());
 	}
 }
