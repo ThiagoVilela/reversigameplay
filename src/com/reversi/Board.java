@@ -11,8 +11,8 @@ public class Board {
 
 	/****************************** MÉTODOS ******************************/
 	/*** Verifica se a posição está vazia ***/
-	public boolean isEmpty(int x, int y) {
-		if (this.cell[x][y].content == '_') {
+	public boolean isEmpty(int x, int y, Cell[][] cell) {
+		if (cell[x][y].content == '_') {
 			return true;
 		} else {
 			return false;
@@ -26,7 +26,7 @@ public class Board {
 		for (int i = x-1; i <= x+1; i++) {
 			for (int j = y-1; j <= y+1; j++) {
 				/* Respeito os limites de bordas do tabuleiro */
-				if (i >= 0 && j >= 0 && i < SIZE || j < SIZE) {
+				if (i >= 0 && j >= 0 && i < SIZE && j < SIZE) {
 					/* Verifico se é uma célula inimiga */
 					if (cell[i][j].content == enemyCell) {
 						/* Armazeno a célula inimiga em uma lista dinamica de coordenadas inteiras */
@@ -41,7 +41,7 @@ public class Board {
 	}
 
 	/*** Verifica toda a direção de uma coordenada (em relação a outra) até encontrar uma peça aliada ***/
-	public void findAllies(int x, int y, char alliedCell, ArrayList<Coordinate> badNeighbors, Cell[][] matrix) {
+	public boolean findAllies(int x, int y, char alliedCell, ArrayList<Coordinate> badNeighbors, Cell[][] matrix) {
 		for (int i = 0; i < badNeighbors.size(); i++) {
 			/* Diagonal superior esquerda */
 			if (badNeighbors.get(i).x == x-1 && badNeighbors.get(i).y == y-1) {
@@ -52,6 +52,7 @@ public class Board {
 						System.out.println("Encontrei um aliado na diagonal superior esquerda ["+j+"]["+j+"]");
 						/* Quebra da condição ao achar um elemento aliado */
 						j = -1;
+						return true;
 					}
 				}
 			}
@@ -64,6 +65,7 @@ public class Board {
 						System.out.println("Encontrei um aliado na esquerda ["+badNeighbors.get(i).x+"]["+j+"]");
 						/* Quebra da condição ao achar um elemento aliado */
 						j = -1;
+						return true;
 					}
 				}
 			}
@@ -76,6 +78,7 @@ public class Board {
 						System.out.println("Encontrei um aliado na diagonal inferior esquerda ["+(badNeighbors.get(i).x+j)+"]["+(badNeighbors.get(i).y-j)+"]");
 						/* Quebra da condição ao achar um elemento aliado */
 						j = badNeighbors.get(i).y +1;
+						return true;
 					}
 				}
 			}
@@ -88,6 +91,7 @@ public class Board {
 						System.out.println("Encontrei um aliado embaixo ["+j+"]["+badNeighbors.get(i).y+"]");
 						/* Quebra da condição ao achar um elemento aliado */
 						j = SIZE;
+						return true;
 					}
 				}
 			}
@@ -100,6 +104,7 @@ public class Board {
 						System.out.println("Encontrei um aliado na diagonal inferior direita ["+j+"]["+j+"]");
 						/* Quebra da condição ao achar um elemento aliado */
 						j = SIZE;
+						return true;
 					}
 				}
 			}
@@ -112,6 +117,7 @@ public class Board {
 						System.out.println("Encontrei um aliado na direita ["+badNeighbors.get(i).x+"]["+j+"]");
 						/* Quebra da condição ao achar um elemento aliado */
 						j = SIZE;
+						return true;
 					}
 				}
 			}
@@ -124,6 +130,7 @@ public class Board {
 						System.out.println("Encontrei um aliado na diagonal superior direita ["+(badNeighbors.get(i).x-j)+"]["+(badNeighbors.get(i).y+j)+"]");
 						/* Quebra da condição ao achar um elemento aliado */
 						j = badNeighbors.get(i).x +1;
+						return true;
 					}
 				}
 			}
@@ -136,16 +143,53 @@ public class Board {
 						System.out.println("Encontrei um aliado logo acima ["+j+"]["+badNeighbors.get(i).y+"]");
 						/* Quebra da condição ao achar um elemento aliado */
 						j = -1;
+						return true;
 					}
 				}
 			}
 			/* Erro - não encaixou em nenhum dos casos */
 			else {
 				System.out.println("Erro ao verificar linha de aliados!");
+				return false;
 			}
 		}
+		return false;
 	}
 
+	/*** Verifica toda a matriz para identificar casas jogáveis no turno ***/
+	public ArrayList<Coordinate> findPlayableCells(Cell[][] board, char enemyCell, char alliedCell){
+		ArrayList<Coordinate> playableCells = new ArrayList<Coordinate>();
+		
+		for (int i = 0; i < SIZE; i++) {
+			for (int j = 0; j < SIZE; j++) {
+				/* Caso a célular esteja vazia */
+				if (this.isEmpty(i, j, board)) {
+					/* Caso a célula tenha inimigos ao seu redor */
+					if (this.hasBadNeighborhood(i, j, enemyCell, board).size() > 0) {
+						/* E possua aliado(s) a frente desse(s) inimigo(s) */
+						if (this.findAllies(i, j, alliedCell, this.hasBadNeighborhood(i, j, enemyCell, board), board)) {
+							playableCells.add(new Coordinate(i, j));
+						}
+					}
+				}
+			}
+		}
+		/* Retorna uma lista com todas as posições jogáveis no momento */
+		return playableCells;
+	}
+	
+	/*** Imprime uma lista de possíveis jogadas ***/
+	public void printPlayableCells(ArrayList<Coordinate> playableCells) {
+		if (playableCells.size() > 0) {
+			System.out.println("Possíveis jogadas:");
+			for (int i = 0; i < playableCells.size(); i++) {
+				System.out.println("Jogada "+(i+1)+": ("+playableCells.get(i).x+","+playableCells.get(i).y+")");
+			}
+		} else {
+			System.out.println("Não existem jogadas possíveis.");
+		}
+	}
+	
 	/*** Método de inserção no tabuleiro ***/
 	public void insertItem(int x, int y, char newContent, String player) {
 		System.out.println("Jogada: " + player + " jogou na casa ["+x+"]["+y+"] = " + newContent);
@@ -268,7 +312,8 @@ public class Board {
 		board.insertItem(7, 7, 'O', "Humano");
 		
 		board.printBoard(board.getCell());
-		board.findAllies(3, 3, 'O', board.hasBadNeighborhood(3, 3, 'X', board.getCell()), board.getCell());
-
+		//board.findAllies(2, 5, 'O', board.hasBadNeighborhood(2, 5, 'X', board.getCell()), board.getCell());
+		board.printPlayableCells(board.findPlayableCells(board.getCell(), 'X', 'O'));
+		board.printBoard(board.getCell());
 	}
 }
