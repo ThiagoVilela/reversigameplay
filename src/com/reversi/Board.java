@@ -342,7 +342,7 @@ public class Board {
 		board.insertItem(0, 0, 'O', "Humano");
 		
 		/* Inserir a diagonal inferior esquerda para teste */
-		/*board.insertItem(4, 2, 'X', "Humano");
+		board.insertItem(4, 2, 'X', "Humano");
 		board.insertItem(5, 1, 'O', "Humano");
 		board.insertItem(6, 0, 'O', "Humano");
 		
