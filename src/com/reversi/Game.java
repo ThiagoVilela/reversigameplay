@@ -150,6 +150,8 @@ public class Game {
 		ArrayList<Transition> transitions = this.board.findPlayableCells(this.board.getCell(), enemyCell, alliedCell);
 		System.out.println("Turno dx " + playerName);
 		//this.board.printPlayableCells(transitions, this.board.getCell());
+		
+		/*** Já entro no estado de MAX ***/
 		this.minMax(transitions);
 		
 	}
@@ -157,38 +159,69 @@ public class Game {
 	/*** Realiza o minMax ***/
 	public void minMax(ArrayList<Transition> transitions) {
 		/*** Chama o alphaBeta para poder "podar" a quantidade de possibilidades derivadas no MinMax ***/
+		/*** Resultado implica no resultado do MIN ***/
 		//Transition bestPlay = this.alphaBeta(transitions);
+		//ArrayList<Board> maxBoards 
 		
 	}
 	
 	/*** Realiza a poda alpha beta ***/
-	public Transition alphaBeta(ArrayList<Transition> transitions) {
+	public ArrayList<Transition> alphaBeta(ArrayList<Transition> transitions) {
+		/*** Lista das variáveis filtradas no poda alphaBeta ***/
+		ArrayList<Transition> bestTransitions = new ArrayList<Transition>();
 		
 		/*** Procura a melhor jogada e utiliza ela para processamento de árvore no minMax ***/
 		int bestPlay = 0;
-		int actualPlay = 0;
 		int bestPlayPosition = 0;
 		for (int i = 0; i < transitions.size(); i++) {
-			for (int j = 0; j < transitions.get(i).initial.size(); j++) {
-				/*** Realizo um somatório dos pesos armazenados em todas as possíveis direções afetadas ***/
-				actualPlay += transitions.get(i).pointsAdd.get(j).intValue();
-			}
-			/*** Multiplico o valor obtido da soma pelo peso da casa em questão ***/
-			actualPlay *= transitions.get(i).cellWeight.get(0).intValue();
-			
 			/*** Caso ela seja maior que a melhor jogada - se torna a melhor jogada ***/
-			if (actualPlay > bestPlay) {
-				bestPlay = actualPlay;
+			if (transitions.get(i).getRealPoints() > bestPlay) {
+				bestPlay = transitions.get(i).getRealPoints();
 				bestPlayPosition = i;
 			}
-			/*** Zero a variável para recomeçar a contagem ***/
-			actualPlay = 0;
 		}
-		System.out.println();
-		System.out.println("A melhor posição para jogar é "
-				+ "("+transitions.get(bestPlayPosition).initial.get(0).x+","+transitions.get(bestPlayPosition).initial.get(0).y+")");
-		System.out.println();
-		return transitions.get(bestPlayPosition);
+		/*** Adiciono a melhor jogada encontrada na lista de melhores transições ***/
+		bestTransitions.add(transitions.get(bestPlayPosition));
+		
+		/*** Utilizo a melhor jogada encontrada em uma comparação com todas as outras para encontrar semelhantes ***/
+		for (int i = 0; i < transitions.size(); i++) {
+			/*** Caso ela seja equivalente a melhor ***/
+			if (transitions.get(i).getRealPoints() == bestTransitions.get(0).getRealPoints()) {
+				/*** Caso ela seja equivalente a melhor - e não esteja adicionada na lista ***/
+				if (bestTransitions.get(0).initial.get(0).x != transitions.get(i).initial.get(0).x && 
+					bestTransitions.get(0).initial.get(0).y != transitions.get(i).initial.get(0).y) {
+					/*** E adicionada na lista ***/
+					bestTransitions.add(transitions.get(i));
+				}
+			}
+		}
+		
+		/*** Imprime  ***/
+		this.printAlphaBetaResult(bestTransitions);
+		
+		return bestTransitions;
+	}
+	
+	/*** Imprime o resultado de alpha beta ***/
+	public void printAlphaBetaResult(ArrayList<Transition> transitions){
+		if (transitions.size() == 1){
+			System.out.println();
+			System.out.println("A melhor posição para jogar é "
+					+ "("+transitions.get(0).initial.get(0).x+","+transitions.get(0).initial.get(0).y+")");
+			System.out.println();
+		}
+		else if (transitions.size() > 1) {
+			System.out.println();
+			System.out.print("As melhores posições para jogar são: ");
+			for (int i = 0; i < transitions.size(); i++) {
+				System.out.print("("+transitions.get(i).initial.get(0).x+","+transitions.get(i).initial.get(0).y+")");
+			}
+			System.out.println();
+			System.out.println();
+		} 
+		else {
+			System.out.println("Erro ao imprimir o resultado da lista obtida por poda alphabeta.");
+		}
 	}
 	
 	/***************************** GET'N SET *****************************/

@@ -605,10 +605,12 @@ public class Board {
 		board.printBoard(board.getCell());
 		//board.findAllies(2, 5, 'O', board.hasBadNeighborhood(2, 5, 'X', board.getCell()), board.getCell());
 		ArrayList<Transition> transitions = board.findPlayableCells(board.getCell(), 'X', 'O');
+		//board.printPlayableCells(transitions, board.getCell());
+		
+		board.printPlayableDetails(transitions, board.getCell());
 		Game game = new Game();
 		game.alphaBeta(transitions);
-		//board.printPlayableCells(transitions, board.getCell());
-		board.printPlayableDetails(transitions, board.getCell());
+		
 		board.setCell(board.protectedInsertItem(1, 1, 'O', "Humano", transitions, board.getCell()));
 		board.setCell(board.protectedInsertItem(7, 5, 'O', "Humano", transitions, board.getCell()));
 		board.setCell(board.protectedInsertItem(6, 6, 'O', "Humano", transitions, board.getCell()));
