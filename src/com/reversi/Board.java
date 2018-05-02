@@ -442,6 +442,15 @@ public class Board {
 
 	/*** Reseta o tabuleiro ***/
 	public void resetBoard() {
+		/* Instancia as variáveis internas a matriz */
+		Cell newBoard[][] = new Cell[SIZE][SIZE];
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 8; j++) {
+				newBoard[i][j] = new Cell();
+			}
+		}
+		this.cell = newBoard;
+		
 		for (int i = 0; i < this.cell.length; i++) {
 			for (int j = 0; j < this.cell[i].length; j++) {
 				if (i==((SIZE/2)-1) && j==((SIZE/2)-1) || i==(SIZE/2) && j==(SIZE/2)) {
@@ -456,7 +465,7 @@ public class Board {
 	/*** Método Imprimir tabuleiro na tela ***/
 	public void printBoard(Cell[][] board) {
 		/**** Limpa a tela para exibir a matriz ****/
-		this.screenClear();
+		//this.screenClear();
 
 		/**** Topo da tabela ****/
 		for (int i = 0; i < board.length; i++) {
@@ -497,15 +506,6 @@ public class Board {
 	public static void main(String[] args) {
 		Board board = new Board();
 
-		Cell celulinha[][] = new Cell[8][8];
-
-		for (int i = 0; i < 8; i++) {
-			for (int j = 0; j < 8; j++) {
-				celulinha[i][j] = new Cell();
-			}
-		}
-
-		board.setCell(celulinha);
 		board.printBoard(board.getCell());
 		//board.insertItem(0, 0, 'X', "Humano");
 		board.resetBoard();
