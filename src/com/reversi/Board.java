@@ -39,7 +39,22 @@ public class Board {
 		}
 		return badNeighbors;
 	}
-
+	/*** Verifica o peso da casa em questão ***/
+	public int checkCellWeight(int x, int y) {
+		if ((x == 0 && y == 0) || (x == 0 && y == SIZE-1) || (x == SIZE-1 && y == 0) || (x == SIZE-1 && y == SIZE-1)) {
+			return 20;
+		} else if((x == 0 && y == 1) || (x == 1 && y == 0) || (x == 1 && y == 1) ||
+				  (x == 0 && y == SIZE-2) || (x == 1 && y == SIZE-1) || (x == 1 && y == SIZE-2) ||
+				  (x == SIZE-1 && y == 1) || (x == SIZE-2 && y == 0) || (x == SIZE-2 && y == 1) ||
+				  (x == SIZE-2 && y == SIZE-1) || (x == SIZE-1 && y == SIZE-2) || (x == SIZE-2 && y == SIZE-2)) {
+			return 0;
+		} else if (x >= 0 && y >= 0) {
+			return 10;
+		} else {
+			System.out.println("Erro ao reconhecer o peso da casa (" + x + "," + y +")");
+			return -1;
+		}
+	}
 	/*** Verifica toda a direção de uma coordenada (em relação a outra) até encontrar uma peça aliada ***/
 	public Transition findAllies(int x, int y, char alliedCell, ArrayList<Coordinate> badNeighbors, Cell[][] matrix) {
 		/* Cria um elemento transição para receber os dados */
@@ -66,7 +81,7 @@ public class Board {
 						newTransition.direction.add(new Coordinate(-1,-1)); //Direção: Superior esquerda
 						newTransition.numberOfIterations.add(numberOfIterations); //Number of iterations to make Inital~End
 						newTransition.pointsAdd.add(numberOfIterations-1);//Number of points that will be add to player
-						newTransition.pointsRemove.add(numberOfIterations-1);//Number of points that will be remove to the other player
+						newTransition.cellWeight.add(this.checkCellWeight(x, y));//Number of points that will be remove to the other player
 						/* Quebra da condição ao achar um elemento aliado */
 						j = SIZE;
 					}
@@ -92,7 +107,7 @@ public class Board {
 						newTransition.direction.add(new Coordinate(0,-1)); //Direção: Superior esquerda
 						newTransition.numberOfIterations.add(numberOfIterations); //Number of iterations to make Inital~End
 						newTransition.pointsAdd.add(numberOfIterations-1);//Number of points that will be add to player
-						newTransition.pointsRemove.add(numberOfIterations-1);//Number of points that will be remove to the other player
+						newTransition.cellWeight.add(this.checkCellWeight(x, y));//Number of points that will be remove to the other player
 						/* Quebra da condição ao achar um elemento aliado */
 						j = -1;
 					}
@@ -119,7 +134,7 @@ public class Board {
 						newTransition.direction.add(new Coordinate(1,-1)); //Direção: Superior esquerda
 						newTransition.numberOfIterations.add(numberOfIterations); //Number of iterations to make Inital~End
 						newTransition.pointsAdd.add(numberOfIterations-1);//Number of points that will be add to player
-						newTransition.pointsRemove.add(numberOfIterations-1);//Number of points that will be remove to the other player
+						newTransition.cellWeight.add(this.checkCellWeight(x, y));//Number of points that will be remove to the other player
 						/* Quebra da condição ao achar um elemento aliado */
 						j = y +1;
 					}
@@ -145,7 +160,7 @@ public class Board {
 						newTransition.direction.add(new Coordinate(1,0)); //Direção: Superior esquerda
 						newTransition.numberOfIterations.add(numberOfIterations); //Number of iterations to make Inital~End
 						newTransition.pointsAdd.add(numberOfIterations-1);//Number of points that will be add to player
-						newTransition.pointsRemove.add(numberOfIterations-1);//Number of points that will be remove to the other player
+						newTransition.cellWeight.add(this.checkCellWeight(x, y));//Number of points that will be remove to the other player
 						/* Quebra da condição ao achar um elemento aliado */
 						j = SIZE;
 					}
@@ -171,7 +186,7 @@ public class Board {
 						newTransition.direction.add(new Coordinate(1,1)); //Direção: Superior esquerda
 						newTransition.numberOfIterations.add(numberOfIterations); //Number of iterations to make Inital~End
 						newTransition.pointsAdd.add(numberOfIterations-1);//Number of points that will be add to player
-						newTransition.pointsRemove.add(numberOfIterations-1);//Number of points that will be remove to the other player
+						newTransition.cellWeight.add(this.checkCellWeight(x, y));//Number of points that will be remove to the other player
 						/* Quebra da condição ao achar um elemento aliado */
 						j = SIZE;
 					}
@@ -197,7 +212,7 @@ public class Board {
 						newTransition.direction.add(new Coordinate(0,1)); //Direção: Superior esquerda
 						newTransition.numberOfIterations.add(numberOfIterations); //Number of iterations to make Inital~End
 						newTransition.pointsAdd.add(numberOfIterations-1);//Number of points that will be add to player
-						newTransition.pointsRemove.add(numberOfIterations-1);//Number of points that will be remove to the other player
+						newTransition.cellWeight.add(this.checkCellWeight(x, y));//Number of points that will be remove to the other player
 						/* Quebra da condição ao achar um elemento aliado */
 						j = SIZE;
 					}
@@ -223,7 +238,7 @@ public class Board {
 						newTransition.direction.add(new Coordinate(-1,1)); //Direção: Superior esquerda
 						newTransition.numberOfIterations.add(numberOfIterations); //Number of iterations to make Inital~End
 						newTransition.pointsAdd.add(numberOfIterations-1);//Number of points that will be add to player
-						newTransition.pointsRemove.add(numberOfIterations-1);//Number of points that will be remove to the other player
+						newTransition.cellWeight.add(this.checkCellWeight(x, y));//Number of points that will be remove to the other player
 						/* Quebra da condição ao achar um elemento aliado */
 						j = x +1;
 					}
@@ -249,7 +264,7 @@ public class Board {
 						newTransition.direction.add(new Coordinate(-1,0)); //Direção: Superior esquerda
 						newTransition.numberOfIterations.add(numberOfIterations); //Number of iterations to make Inital~End
 						newTransition.pointsAdd.add(numberOfIterations-1);//Number of points that will be add to player
-						newTransition.pointsRemove.add(numberOfIterations-1);//Number of points that will be remove to the other player
+						newTransition.cellWeight.add(this.checkCellWeight(x, y));//Number of points that will be remove to the other player
 						/* Quebra da condição ao achar um elemento aliado */
 						j = -1;
 					}
@@ -320,6 +335,7 @@ public class Board {
 					System.out.println(" - Na direção:("+playableCells.get(i).direction.get(j).x+","+playableCells.get(i).direction.get(j).y+")"+ 
 						  " Ganhando " + playableCells.get(i).pointsAdd.get(j) + " pontos");
 					System.out.println("Encontrando o elemento com " + playableCells.get(i).numberOfIterations.get(j) + " iterações.");
+					System.out.println("Peso da casa é de " + playableCells.get(i).cellWeight.get(j));
 				}
 			}
 		} else {
@@ -519,7 +535,7 @@ public class Board {
 	public static void main(String[] args) {
 		Board board = new Board();
 
-		board.printBoard(board.getCell());
+		//board.printBoard(board.getCell());
 		//board.insertItem(0, 0, 'X', "Humano");
 		board.resetBoard();
 		board.printBoard(board.getCell());
@@ -589,8 +605,10 @@ public class Board {
 		board.printBoard(board.getCell());
 		//board.findAllies(2, 5, 'O', board.hasBadNeighborhood(2, 5, 'X', board.getCell()), board.getCell());
 		ArrayList<Transition> transitions = board.findPlayableCells(board.getCell(), 'X', 'O');
-		board.printPlayableCells(transitions, board.getCell());
-		//board.printPlayableDetails(transitions, board.getCell());
+		Game game = new Game();
+		game.alphaBeta(transitions);
+		//board.printPlayableCells(transitions, board.getCell());
+		board.printPlayableDetails(transitions, board.getCell());
 		board.setCell(board.protectedInsertItem(1, 1, 'O', "Humano", transitions, board.getCell()));
 		board.setCell(board.protectedInsertItem(7, 5, 'O', "Humano", transitions, board.getCell()));
 		board.setCell(board.protectedInsertItem(6, 6, 'O', "Humano", transitions, board.getCell()));

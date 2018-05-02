@@ -9,7 +9,7 @@ public class Main {
 		Game game = new Game();
 		/*** Parametro 0 - Humano x Humano ***/
 		/*** Parametro 1 - Humano x IA ***/
-		game.startGame(0);
+		game.startGame(1);
 	}
 	
 	/***************************** GET'N SET *****************************/

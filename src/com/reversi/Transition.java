@@ -8,5 +8,5 @@ public class Transition {
 	public ArrayList<Coordinate> direction = new ArrayList<Coordinate>();
 	public ArrayList<Integer> numberOfIterations = new ArrayList<Integer>();
 	public ArrayList<Integer> pointsAdd = new ArrayList<Integer>();
-	public ArrayList<Integer> pointsRemove = new ArrayList<Integer>();
+	public ArrayList<Integer> cellWeight = new ArrayList<Integer>();
 }
