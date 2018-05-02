@@ -7,6 +7,8 @@ public class Main {
 	/***************************** MAINZAO DA MASSA *****************************/
 	public static void main(String[] args) {
 		Game game = new Game();
+		/*** Parametro 0 - Humano x Humano ***/
+		/*** Parametro 1 - Humano x IA ***/
 		game.startGame(0);
 	}
 	

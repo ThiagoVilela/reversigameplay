@@ -439,7 +439,20 @@ public class Board {
 		board[x][y].content = newContent;
 		return board;
 	}
-
+	
+	/*** Método para verificar se o tabuleiro está com todas as células completas ***/
+	public boolean isFull(Cell[][] board) {
+		for (int i = 0; i < board.length; i++) {
+			for (int j = 0; j < board[i].length; j++) {
+				if (board[i][j].content == '_') {
+					return false;
+				}
+			}
+		}
+		
+		return true;
+	}
+	
 	/*** Reseta o tabuleiro ***/
 	public void resetBoard() {
 		/* Instancia as variáveis internas a matriz */
