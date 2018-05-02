@@ -328,23 +328,116 @@ public class Board {
 	}
 	
 	/*** Método com filtros de inserção no tabuleiro ***/
-	public void protectedInsertItem(int x, int y, char newContent, String player, ArrayList<Transition> transitions) {
+	public Cell[][] protectedInsertItem(int x, int y, char newContent, String player, ArrayList<Transition> transitions, Cell[][] board) {
 		for (int i = 0; i < transitions.size(); i++) {
 			for (int j = 0; j < transitions.get(i).initial.size(); j++) {
 				if (x == transitions.get(i).initial.get(j).x && y == transitions.get(i).initial.get(j).y) {
-					this.insertItem(x, y, newContent, player);
-					return;
+					board = this.changeItemsOnPlay(x, y, newContent, transitions.get(i), board);
+					board = this.insertItem(x, y, newContent, player, board);
+					return board;
 				}
 			}
 			
 		}
 		System.out.println("Erro na inserção com filtros do elemento ("+x+","+y+")");
+		return board;
+	}
+	
+	/*** Método para alterar as peças entre a jogada e a aliada delimitadora ***/
+	public Cell[][] changeItemsOnPlay(int x, int y, char newContent, Transition transition, Cell[][] board) {
+		for (int i = 0; i < transition.initial.size(); i++) {
+			int j = x;
+			int j2 = y;
+			if (j < transition.end.get(i).x && j2 < transition.end.get(i).y) {
+				while (j < transition.end.get(i).x && j2 < transition.end.get(i).y) {
+					j+=transition.direction.get(i).x;
+					j2+=transition.direction.get(i).y;
+					if (j < transition.end.get(i).x && j2 < transition.end.get(i).y) {
+						board[j][j2].content = newContent;
+					}
+				}
+			} 
+			
+			else if(j > transition.end.get(i).x && j2 > transition.end.get(i).y){
+				while (j > transition.end.get(i).x && j2 > transition.end.get(i).y) {
+					j+=transition.direction.get(i).x;
+					j2+=transition.direction.get(i).y;
+					if (j > transition.end.get(i).x && j2 > transition.end.get(i).y) {
+						board[j][j2].content = newContent;
+					}
+				}
+			}
+			
+			else if(j > transition.end.get(i).x && j2 < transition.end.get(i).y){
+				while (j > transition.end.get(i).x && j2 < transition.end.get(i).y) {
+					j+=transition.direction.get(i).x;
+					j2+=transition.direction.get(i).y;
+					if (j > transition.end.get(i).x && j2 < transition.end.get(i).y) {
+						board[j][j2].content = newContent;
+					}
+				}
+			}
+			
+			else if(j < transition.end.get(i).x && j2 > transition.end.get(i).y){
+				while (j < transition.end.get(i).x && j2 > transition.end.get(i).y) {
+					j+=transition.direction.get(i).x;
+					j2+=transition.direction.get(i).y;
+					if (j < transition.end.get(i).x && j2 > transition.end.get(i).y) {
+						board[j][j2].content = newContent;
+					}
+				}
+			}
+			
+			else if(j < transition.end.get(i).x && j2 == transition.end.get(i).y){
+				while (j < transition.end.get(i).x && j2 == transition.end.get(i).y) {
+					j+=transition.direction.get(i).x;
+					j2+=transition.direction.get(i).y;
+					if (j < transition.end.get(i).x && j2 == transition.end.get(i).y) {
+						board[j][j2].content = newContent;
+					}
+				}
+			}
+			
+			else if(j == transition.end.get(i).x && j2 < transition.end.get(i).y){
+				while (j == transition.end.get(i).x && j2 < transition.end.get(i).y) {
+					j+=transition.direction.get(i).x;
+					j2+=transition.direction.get(i).y;
+					if (j == transition.end.get(i).x && j2 < transition.end.get(i).y) {
+						board[j][j2].content = newContent;
+					}
+				}
+			}
+			
+			else if(j > transition.end.get(i).x && j2 == transition.end.get(i).y){
+				while (j > transition.end.get(i).x && j2 == transition.end.get(i).y) {
+					j+=transition.direction.get(i).x;
+					j2+=transition.direction.get(i).y;
+					if (j > transition.end.get(i).x && j2 == transition.end.get(i).y) {
+						board[j][j2].content = newContent;
+					}
+				}
+			}
+			
+			else if(j == transition.end.get(i).x && j2 > transition.end.get(i).y){
+				while (j == transition.end.get(i).x && j2 > transition.end.get(i).y) {
+					j+=transition.direction.get(i).x;
+					j2+=transition.direction.get(i).y;
+					if (j == transition.end.get(i).x && j2 > transition.end.get(i).y) {
+						board[j][j2].content = newContent;
+					}
+				}
+			}
+			
+			
+		}
+		return board;
 	}
 	
 	/*** Método de inserção no tabuleiro ***/
-	public void insertItem(int x, int y, char newContent, String player) {
+	public Cell[][] insertItem(int x, int y, char newContent, String player, Cell[][] board) {
 		System.out.println("Jogada: " + player + " jogou na casa ["+x+"]["+y+"] = " + newContent);
-		this.cell[x][y].content = newContent;
+		board[x][y].content = newContent;
+		return board;
 	}
 
 	/*** Reseta o tabuleiro ***/
@@ -463,29 +556,33 @@ public class Board {
 		board.insertItem(7, 7, 'O', "Humano");*/
 		
 		/*** Novos casos de teste ***/
-		board.insertItem(1, 3, 'O', "Humano");
-		board.insertItem(1, 4, 'O', "Humano");
-		board.insertItem(2, 3, 'O', "Humano");
-		board.insertItem(2, 2, 'X', "Humano");
-		board.insertItem(2, 4, 'X', "Humano");
-		board.insertItem(2, 5, 'X', "Humano");
-		board.insertItem(3, 2, 'O', "Humano");
-		board.insertItem(3, 5, 'O', "Humano");
-		board.insertItem(4, 2, 'O', "Humano");
-		board.insertItem(4, 5, 'X', "Humano");
-		board.insertItem(4, 6, 'O', "Humano");
-		board.insertItem(5, 2, 'X', "Humano");
-		board.insertItem(5, 5, 'X', "Humano");
-		board.insertItem(5, 6, 'X', "Humano");
-		board.insertItem(6, 5, 'X', "Humano");
-		board.insertItem(7, 6, 'O', "Humano");
+		board.setCell(board.insertItem(1, 3, 'O', "Humano", board.getCell()));
+		board.setCell(board.insertItem(1, 4, 'O', "Humano", board.getCell()));
+		board.setCell(board.insertItem(2, 3, 'O', "Humano", board.getCell()));
+		board.setCell(board.insertItem(2, 2, 'X', "Humano", board.getCell()));
+		board.setCell(board.insertItem(2, 4, 'X', "Humano", board.getCell()));
+		board.setCell(board.insertItem(2, 5, 'X', "Humano", board.getCell()));
+		board.setCell(board.insertItem(3, 2, 'O', "Humano", board.getCell()));
+		board.setCell(board.insertItem(3, 5, 'O', "Humano", board.getCell()));
+		board.setCell(board.insertItem(4, 2, 'O', "Humano", board.getCell()));
+		board.setCell(board.insertItem(4, 5, 'X', "Humano", board.getCell()));
+		board.setCell(board.insertItem(4, 6, 'O', "Humano", board.getCell()));
+		board.setCell(board.insertItem(5, 2, 'X', "Humano", board.getCell()));
+		board.setCell(board.insertItem(5, 5, 'X', "Humano", board.getCell()));
+		board.setCell(board.insertItem(5, 6, 'X', "Humano", board.getCell()));
+		board.setCell(board.insertItem(6, 5, 'X', "Humano", board.getCell()));
+		board.setCell(board.insertItem(7, 6, 'O', "Humano", board.getCell()));
 		
 		board.printBoard(board.getCell());
 		//board.findAllies(2, 5, 'O', board.hasBadNeighborhood(2, 5, 'X', board.getCell()), board.getCell());
 		ArrayList<Transition> transitions = board.findPlayableCells(board.getCell(), 'X', 'O');
 		board.printPlayableCells(transitions, board.getCell());
 		//board.printPlayableDetails(transitions, board.getCell());
-		board.protectedInsertItem(1, 1, 'O', "Humano", transitions);
+		board.setCell(board.protectedInsertItem(1, 1, 'O', "Humano", transitions, board.getCell()));
+		board.setCell(board.protectedInsertItem(7, 5, 'O', "Humano", transitions, board.getCell()));
+		board.setCell(board.protectedInsertItem(6, 6, 'O', "Humano", transitions, board.getCell()));
+		board.setCell(board.protectedInsertItem(7, 7, 'O', "Humano", transitions, board.getCell()));
+		board.printBoard(board.getCell());
 		
 	}
 }
