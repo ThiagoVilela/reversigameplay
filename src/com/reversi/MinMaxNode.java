@@ -9,9 +9,20 @@ public class MinMaxNode {
 	/*** Melhores jogadas (com filtro alpha beta caso seja IA) para o tabuleiro atual ***/
 	private ArrayList<Transition> bestPlays = new ArrayList<Transition>();
 	/*** Lista de filhos (jogadas derivadas das bestPlays) ***/
-	private ArrayList<MinMaxNode> sons = null;
+	private ArrayList<MinMaxNode> sons = new ArrayList<MinMaxNode>();
 	/*** Indicador de MIN ou MAX ***/
 	private boolean min;
+	
+	/***************************** METODOS *****************************/
+	/*** Imprime todo o conteúdo do nó ***/
+	public void printNodeContent() {
+		System.out.println();
+		System.out.println("Vou imprimir um nó");
+		//this.board.printBoard(this.board.getCell());
+		this.board.printPlayableDetails(this.bestPlays, this.board.getCell());
+		System.out.println("ESTADO: " + this.min);
+		System.out.println("Possuo " + sons.size() + " filhos.");
+	}
 	
 	/***************************** GET'N SET *****************************/
 	public Board getBoard() {

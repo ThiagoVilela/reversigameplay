@@ -611,11 +611,17 @@ public class Board {
 		Game game = new Game();
 		game.alphaBeta(transitions);
 		
-		board.setCell(board.protectedInsertItem(1, 1, 'O', "Humano", transitions, board.getCell()));
+		/*board.setCell(board.protectedInsertItem(1, 1, 'O', "Humano", transitions, board.getCell()));
 		board.setCell(board.protectedInsertItem(7, 5, 'O', "Humano", transitions, board.getCell()));
-		board.setCell(board.protectedInsertItem(6, 6, 'O', "Humano", transitions, board.getCell()));
-		board.setCell(board.protectedInsertItem(7, 7, 'O', "Humano", transitions, board.getCell()));
-		board.printBoard(board.getCell());
+		board.setCell(board.protectedInsertItem(6, 6, 'O', "Humano", transitions, board.getCell()));*/
+		
+		game.getBoard().resetBoard();
+		game.setPlayer1(new Player("Thiago", 'O'));
+		game.setPlayer2(new Player("Adalberto", 'X'));
+		game.minMax('X', 'O', "ADALBERTO");
+		
+		//board.setCell(board.protectedInsertItem(7, 7, 'O', "Humano", transitions, board.getCell()));
+		//board.printBoard(board.getCell());
 		
 	}
 }

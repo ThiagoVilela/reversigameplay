@@ -152,6 +152,11 @@ public class Game {
 	
 	/*** Realiza o minMax ***/
 	public void minMax(char alliedCell, char enemyCell, String playerName) {
+		System.out.println();
+		System.out.println();
+		System.out.println("ENTREI NO MINMAX ");
+		System.out.println();
+		System.out.println();
 		/*** Crio a árvore para lógica do MINMAX ***/
 		MinMaxNode treeRoot = new MinMaxNode();
 		
@@ -173,8 +178,17 @@ public class Game {
 		/*** Faço simulações individuais de cada elemento no bestPlays - e salvo em filhos no nó raiz ***/
 		/************** MIN MIN MIN MIN MIN MIN MIN MIN MIN MIN MIN MIN MIN MIN MIN MIN MIN **************/
 		for (int i = 0; i < treeRoot.getBestPlays().size(); i++) {
-			
-			Board newBoard = treeRoot.getBoard();// Crio um novo tabuleiro para sofrer alterações - baseado no da raiz
+			System.out.println("VOU ENTRAR NO FOR");
+			//Board newBoard = treeRoot.getBoard();
+			// Crio um novo tabuleiro para sofrer alterações - baseado no da raiz
+			Board newBoard = new Board();
+			//Faço a transferencia de conteúdo devido a manutenção da posição de memória diretamente
+			for (int j = 0; j < newBoard.SIZE; j++) {
+				for (int j2 = 0; j2 < newBoard.SIZE; j2++) {
+					newBoard.cell[j][j2] = new Cell();
+					newBoard.cell[j][j2].content = treeRoot.getBoard().cell[j][j2].content;
+				}
+			}
 			
 			//Faço as inserções neste novo tabuleiro baseado no bestPlays
 			newBoard.setCell(newBoard.protectedInsertItem(bestPlays.get(i).initial.get(0).x, 
@@ -201,7 +215,23 @@ public class Game {
 			treeRoot.getSons().add(son); //Adiciono o novo filho construído para a árvore
 		}
 		
+		this.printTree(treeRoot);
+		
 		/************** Devo continuar os próximos nós da árvore **************/	
+	}
+	
+	/************** Imprimo o conteúdo da árvore **************/	
+	public void printTree(MinMaxNode tree) {
+		tree.printNodeContent();
+		
+		System.out.println();
+		System.out.println();
+		System.out.println("VOU IMPRIMIR OS FILHOS");
+		System.out.println();
+		System.out.println();
+		for (int i = 0; i < tree.getSons().size(); i++) {
+			tree.getSons().get(i).printNodeContent();
+		}
 	}
 	
 	/*** Realiza a poda alpha beta ***/
