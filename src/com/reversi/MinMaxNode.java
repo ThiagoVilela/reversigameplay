@@ -16,6 +16,9 @@ public class MinMaxNode {
 	/***************************** METODOS *****************************/
 	/*** Imprime todo o conteúdo do nó ***/
 	public void printNodeContent() {
+		if (this.min) {
+			System.out.println("ATENÇAO - LISTA DE JOGADAS INIMIGAS");
+		}
 		System.out.println();
 		System.out.println("Vou imprimir um nó");
 		//this.board.printBoard(this.board.getCell());

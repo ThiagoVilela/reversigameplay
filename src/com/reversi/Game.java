@@ -8,6 +8,7 @@ public class Game {
 	private Board board = new Board();
 	private Player player1;
 	private Player player2;
+	public static int LEVEL = 1;
 
 	/****************************** MÉTODOS ******************************/
 	/*** Starto o jogo ***/
@@ -146,12 +147,14 @@ public class Game {
 	
 	/*** Opção de jogo para a IA ***/
 	public void aiPlays(char alliedCell, char enemyCell, String playerName) {
-		/*** Já entro no estado de MAX ***/
-		this.minMax(alliedCell, enemyCell, playerName);
+		/*** Consigo a árvore de jogadas preenchida ***/
+		MinMaxNode analysisTree = this.minMax(alliedCell, enemyCell, playerName);
+		
+		
 	}
 	
 	/*** Realiza o minMax ***/
-	public void minMax(char alliedCell, char enemyCell, String playerName) {
+	public MinMaxNode minMax(char alliedCell, char enemyCell, String playerName) {
 		System.out.println();
 		System.out.println();
 		System.out.println("ENTREI NO MINMAX ");
@@ -178,13 +181,12 @@ public class Game {
 		/*** Faço simulações individuais de cada elemento no bestPlays - e salvo em filhos no nó raiz ***/
 		/************** MIN MIN MIN MIN MIN MIN MIN MIN MIN MIN MIN MIN MIN MIN MIN MIN MIN **************/
 		for (int i = 0; i < treeRoot.getBestPlays().size(); i++) {
-			System.out.println("VOU ENTRAR NO FOR");
 			//Board newBoard = treeRoot.getBoard();
 			// Crio um novo tabuleiro para sofrer alterações - baseado no da raiz
 			Board newBoard = new Board();
 			//Faço a transferencia de conteúdo devido a manutenção da posição de memória diretamente
-			for (int j = 0; j < newBoard.SIZE; j++) {
-				for (int j2 = 0; j2 < newBoard.SIZE; j2++) {
+			for (int j = 0; j < Board.SIZE; j++) {
+				for (int j2 = 0; j2 < Board.SIZE; j2++) {
 					newBoard.cell[j][j2] = new Cell();
 					newBoard.cell[j][j2].content = treeRoot.getBoard().cell[j][j2].content;
 				}
@@ -217,11 +219,146 @@ public class Game {
 		
 		this.printTree(treeRoot);
 		
-		/************** Devo continuar os próximos nós da árvore **************/	
+		/************** Chamo a função recursivamente para alteração da árvore **************/
+		/************** O mínimo necessário para fazer um MINMAX básico são 4 níveis (0 a 3) **************/
+		/************** Sendo assim - o usuário poderá escolher o nível de dificuldade da IA **************/
+		/************** Que sempre será par (4~6~8~...~N) - assim será o fator que multiplica o numero 2 **************/
+		for (int i = 0; i < 2*Game.LEVEL; i++) {
+			treeRoot = this.continueMinMax(treeRoot);
+		}
+		
+		//treeRoot = this.continueMinMax(treeRoot);
+		
+		this.printTree(treeRoot);
+		
+		return treeRoot;
+	}
+	
+	/************** Faço os dois passos finais (que podem ser recursivos) do MINMAX **************/
+	public MinMaxNode continueMinMax(MinMaxNode tree) {
+		System.out.println();
+		System.out.println();
+		System.out.println();
+		
+		System.out.println("ENTREI NO CONTINUE MINMAX");
+		
+		System.out.println();
+		System.out.println();
+		System.out.println();
+		/*** Caso a lista de filhos NAO esteja vazia ***/
+		if (tree.getSons().size() > 0) {
+			for (int i = 0; i < tree.getSons().size(); i++) {
+				/*** Chame a função até chegar todos os folhas ***/
+				tree.getSons().set(i, this.continueMinMax(tree.getSons().get(i)));
+			}
+			return tree;
+		}
+		/*** Caso a lista de filhos esteja vazia - encontrou um nó folha ***/
+		else if(tree.getSons().size() == 0) {
+			//Faço com alpha beta
+			if (!tree.isMin()) {
+				/************** MAX MAX MAX MAX MAX MAX MAX MAX MAX MAX MAX MAX MAX MAX MAX MAX MAX **************/
+				for (int i = 0; i < tree.getBestPlays().size(); i++) {
+					// Crio um novo tabuleiro para sofrer alterações - baseado no da raiz
+					Board newBoard = new Board();
+					//Faço a transferencia de conteúdo devido a manutenção da posição de memória diretamente
+					for (int j = 0; j < Board.SIZE; j++) {
+						for (int j2 = 0; j2 < Board.SIZE; j2++) {
+							newBoard.cell[j][j2] = new Cell();
+							newBoard.cell[j][j2].content = tree.getBoard().cell[j][j2].content;
+						}
+					}
+					
+					//Faço as inserções neste novo tabuleiro baseado no bestPlays
+					newBoard.setCell(newBoard.protectedInsertItem(tree.getBestPlays().get(i).initial.get(0).x, 
+																  tree.getBestPlays().get(i).initial.get(0).y, 
+																  this.player2.getPiece(), 
+																  this.player2.getName(), 
+																  tree.getBestPlays(), 
+																  newBoard.getCell())); 
+					
+					//Acho as novas possíveis transições sobre esse novo tabuleiro - considerando a visão da IA
+					ArrayList<Transition> newBoardTransitions = newBoard.findPlayableCells(newBoard.getCell(), 
+																						   this.player2.getPiece(), 
+																						   this.player1.getPiece());
+					
+					// Crio um novo vetor de bestPlays baseado nas novas transições possíveis - porque deve analisar todas as jogadas inimigas
+					ArrayList<Transition> newBestPlays = this.alphaBeta(newBoardTransitions); 
+					
+					MinMaxNode son = new MinMaxNode();
+					son.setBoard(newBoard); //Atribuo o board imaginário alterado no nó raíz da árvore
+					son.setBestPlays(newBestPlays); //Atribuo a leitura do novo quadro imaginário - depois do nó raíz da árvore
+					son.setMin(tree.isMin()); //Atribuo o contrário do MIN (sempre invertido)
+					son.setSons(new ArrayList<MinMaxNode>()); //Inicializo o vetor de filhos
+					
+					tree.getSons().add(son); //Adiciono o novo filho construído para a árvore
+				}
+				
+				return tree;
+			}
+			//faço sem alpha beta
+			else if(tree.isMin()) {
+				/************** MIN MIN MIN MIN MIN MIN MIN MIN MIN MIN MIN MIN MIN MIN MIN MIN MIN **************/
+				for (int i = 0; i < tree.getBestPlays().size(); i++) {
+					// Crio um novo tabuleiro para sofrer alterações - baseado no da raiz
+					Board newBoard = new Board();
+					//Faço a transferencia de conteúdo devido a manutenção da posição de memória diretamente
+					for (int j = 0; j < Board.SIZE; j++) {
+						for (int j2 = 0; j2 < Board.SIZE; j2++) {
+							newBoard.cell[j][j2] = new Cell();
+							newBoard.cell[j][j2].content = tree.getBoard().cell[j][j2].content;
+						}
+					}
+					
+					//Faço as inserções neste novo tabuleiro baseado no bestPlays
+					newBoard.setCell(newBoard.protectedInsertItem(tree.getBestPlays().get(i).initial.get(0).x, 
+																  tree.getBestPlays().get(i).initial.get(0).y, 
+																  this.player1.getPiece(), 
+																  this.player1.getName(), 
+																  tree.getBestPlays(), 
+																  newBoard.getCell())); 
+					
+					//Acho as novas possíveis transições sobre esse novo tabuleiro - considerando a visão do P1
+					ArrayList<Transition> newBoardTransitions = newBoard.findPlayableCells(newBoard.getCell(), 
+																						   this.player1.getPiece(), 
+																						   this.player2.getPiece());
+					
+					// Não crio um novo vetor de bestPlays baseado nas novas transições possíveis - porque deve analisar todas as jogadas inimigas
+					//ArrayList<Transition> newBestPlays = this.alphaBeta(newBoardTransitions); 
+					
+					MinMaxNode son = new MinMaxNode();
+					son.setBoard(newBoard); //Atribuo o board imaginário alterado no nó raíz da árvore
+					son.setBestPlays(newBoardTransitions); //Atribuo a leitura do novo quadro imaginário - depois do nó raíz da árvore
+					son.setMin(!tree.isMin()); //Atribuo o contrário do MIN (sempre invertido)
+					son.setSons(new ArrayList<MinMaxNode>()); //Inicializo o vetor de filhos
+					
+					tree.getSons().add(son); //Adiciono o novo filho construído para a árvore
+				}
+				
+				return tree;
+			}
+			else {
+				System.out.println("Erro ao identificar se é MAX ou MIN do terceiro nível em diante da árvore de MINMAX");
+			}
+		}
+		
+		
+		return tree;
+	}
+	
+	/************** Encontro o estado MIN ou MAX do estado folha da árvore **************/	
+	public boolean leafMinOrMax(MinMaxNode tree) {
+		/*** TO DO ***/
+		return true;
 	}
 	
 	/************** Imprimo o conteúdo da árvore **************/	
 	public void printTree(MinMaxNode tree) {
+		System.out.println();
+		System.out.println();
+		System.out.println("VOU IMPRIMIR O PAI");
+		System.out.println();
+		System.out.println();
 		tree.printNodeContent();
 		
 		System.out.println();
@@ -231,6 +368,10 @@ public class Game {
 		System.out.println();
 		for (int i = 0; i < tree.getSons().size(); i++) {
 			tree.getSons().get(i).printNodeContent();
+			if (tree.getSons().get(i).getSons().size() > 0) {
+				this.printTree(tree.getSons().get(i));
+			}
+			
 		}
 	}
 	
