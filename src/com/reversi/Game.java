@@ -146,39 +146,62 @@ public class Game {
 	
 	/*** Opção de jogo para a IA ***/
 	public void aiPlays(char alliedCell, char enemyCell, String playerName) {
-		/*** Apresento o tabuleiro com as possíveis jogadas para o jogador ***/
-		ArrayList<Transition> transitions = this.board.findPlayableCells(this.board.getCell(), enemyCell, alliedCell);
-		System.out.println("Turno dx " + playerName);
-		//this.board.printPlayableCells(transitions, this.board.getCell());
-		
 		/*** Já entro no estado de MAX ***/
-		this.minMax(transitions);
-		
+		this.minMax(alliedCell, enemyCell, playerName);
 	}
 	
 	/*** Realiza o minMax ***/
-	public void minMax(ArrayList<Transition> transitions) {
-		/*** Chama o alphaBeta para poder "podar" a quantidade de possibilidades derivadas no MinMax ***/
-		
-		/************** MIN MIN MIN MIN MIN MIN MIN MIN MIN MIN MIN MIN MIN MIN MIN MIN MIN **************/
-		/*** Resultado implica no resultado do MIN ***/
-		ArrayList<Transition> bestPlays = this.alphaBeta(transitions);
-		
-		/*** Crio um vetor de boards para simular as jogadas obtidas no bestPlays ***/
-		Board[] boards = new Board[bestPlays.size()];
-		for (int i = 0; i < boards.length; i++) {
-			boards[i] = this.board;
-			boards[i].setCell(boards[i].insertItem(bestPlays.get(i).initial.get(0).x, 
-												   bestPlays.get(i).initial.get(0).y, 
-												   this.player2.getPiece(), 
-												   this.player2.getName(), 
-												   boards[i].getCell())
-												   );
-		}
+	public void minMax(char alliedCell, char enemyCell, String playerName) {
+		/*** Crio a árvore para lógica do MINMAX ***/
+		MinMaxNode treeRoot = new MinMaxNode();
 		
 		/************** MAX MAX MAX MAX MAX MAX MAX MAX MAX MAX MAX MAX MAX MAX MAX MAX MAX **************/
+		/*** Apresento o tabuleiro com as possíveis jogadas para o jogador ***/
+		ArrayList<Transition> transitions = this.board.findPlayableCells(this.board.getCell(), enemyCell, alliedCell);
+		//this.board.printPlayableCells(transitions, this.board.getCell());
+		System.out.println("Turno dx " + playerName);
 		
+		/*** Chama o alphaBeta para poder "podar" a quantidade de possibilidades derivadas no MinMax ***/
+		ArrayList<Transition> bestPlays = this.alphaBeta(transitions);
 		
+		/*** Atribuição dos elementos do nó raíz da árvore MINMAX ***/
+		treeRoot.setBoard(this.board); //Atribuo o Board atual no nó raíz da árvore
+		treeRoot.setBestPlays(bestPlays); //Atribuo a leitura do quadro atual (jogo real) ao nó raíz da árvore
+		treeRoot.setMin(false); //Atribuo false no MIN (true no MAX por tabela)
+		treeRoot.setSons(new ArrayList<MinMaxNode>()); //Inicializo o vetor de filhos
+		
+		/*** Faço simulações individuais de cada elemento no bestPlays - e salvo em filhos no nó raiz ***/
+		/************** MIN MIN MIN MIN MIN MIN MIN MIN MIN MIN MIN MIN MIN MIN MIN MIN MIN **************/
+		for (int i = 0; i < treeRoot.getBestPlays().size(); i++) {
+			
+			Board newBoard = treeRoot.getBoard();// Crio um novo tabuleiro para sofrer alterações - baseado no da raiz
+			
+			//Faço as inserções neste novo tabuleiro baseado no bestPlays
+			newBoard.setCell(newBoard.protectedInsertItem(bestPlays.get(i).initial.get(0).x, 
+														  bestPlays.get(i).initial.get(0).y, 
+														  this.player2.getPiece(), 
+														  this.player2.getName(), 
+														  transitions, 
+														  newBoard.getCell())); 
+			
+			//Acho as novas possíveis transições sobre esse novo tabuleiro - considerando a visão do Player1
+			ArrayList<Transition> newBoardTransitions = newBoard.findPlayableCells(newBoard.getCell(), 
+																				   this.player2.getPiece(), 
+																				   this.player1.getPiece());
+			
+			// Não crio um novo vetor de bestPlays baseado nas novas transições possíveis - porque deve analisar todas as jogadas inimigas
+			//ArrayList<Transition> newBestPlays = this.alphaBeta(newBoardTransitions); 
+			
+			MinMaxNode son = new MinMaxNode();
+			son.setBoard(newBoard); //Atribuo o board imaginário alterado no nó raíz da árvore
+			son.setBestPlays(newBoardTransitions); //Atribuo a leitura do novo quadro imaginário - depois do nó raíz da árvore
+			son.setMin(!treeRoot.isMin()); //Atribuo o contrário do MIN (sempre invertido)
+			son.setSons(new ArrayList<MinMaxNode>()); //Inicializo o vetor de filhos
+			
+			treeRoot.getSons().add(son); //Adiciono o novo filho construído para a árvore
+		}
+		
+		/************** Devo continuar os próximos nós da árvore **************/	
 	}
 	
 	/*** Realiza a poda alpha beta ***/
