@@ -158,6 +158,7 @@ public class Game {
 			ArrayList<Transition> transitions = this.board.findPlayableCells(this.board.getCell(), enemyCell, alliedCell);
 			System.out.println("Turno dx " + playerName);
 			this.board.setCell(this.board.protectedInsertItem(bestMove.initial.get(0).x, bestMove.initial.get(0).y, alliedCell, playerName, transitions, this.board.getCell()));
+			this.board.printBoard(this.board.getCell());
 		}
 		
 		else {
@@ -204,21 +205,24 @@ public class Game {
 			}
 		}
 		
-		/*** Acho a coordenada alterada entre os itens da árvore - em função da peça da IA ***/
-		Coordinate foundCoordinate = (this.findDifferentCoordinate(tree.getBoard().getCell(), 
-																  tree.getBestSon().getBoard().getCell(), 
-																  this.player2.getPiece()));
-		
-		/*** Procuro a coordenada encontrada no vetor de bestPlays ***/
-		for (int j = 0; j < tree.getBestPlays().size(); j++) {
-			if (tree.getBestPlays().get(j).initial.get(0).x == foundCoordinate.x
-				&&	tree.getBestPlays().get(j).initial.get(0).y == foundCoordinate.y) {
-				/*** Retorno a transição desejada ***/
-				return tree.getBestPlays().get(j);
+		if (tree.getBestSon() != null) {
+			/*** Acho a coordenada alterada entre os itens da árvore - em função da peça da IA ***/
+			Coordinate foundCoordinate = (this.findDifferentCoordinate(tree.getBoard().getCell(), 
+																	  tree.getBestSon().getBoard().getCell(), 
+																	  this.player2.getPiece()));
+			
+			/*** Procuro a coordenada encontrada no vetor de bestPlays ***/
+			for (int j = 0; j < tree.getBestPlays().size(); j++) {
+				if (tree.getBestPlays().get(j).initial.get(0).x == foundCoordinate.x
+					&&	tree.getBestPlays().get(j).initial.get(0).y == foundCoordinate.y) {
+					/*** Retorno a transição desejada ***/
+					return tree.getBestPlays().get(j);
+				}
 			}
 		}
 		
 		/*** Retorna a inicial como erro ***/
+		System.out.println("VOU RETORNAR A PADRAO COMO ERRO");
 		return tree.getBestPlays().get(0);
 	}
 	

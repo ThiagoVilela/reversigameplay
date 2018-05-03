@@ -636,6 +636,7 @@ public class Board {
 		board.setCell(board.protectedInsertItem(6, 6, 'O', "Humano", transitions, board.getCell()));*/
 		
 		game.getBoard().resetBoard();
+		game.getBoard().setCell(board.getCell());
 		game.setPlayer1(new Player("Thiago", 'O'));
 		game.setPlayer2(new Player("Adalberto", 'X'));
 		game.aiPlays('X', 'O', "ADALBERTO");
