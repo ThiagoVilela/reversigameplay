@@ -19,6 +19,9 @@ public class MinMaxNode {
 		System.out.println();
 		System.out.println("Vou imprimir um nó");
 		//this.board.printBoard(this.board.getCell());
+		if (this.min) {
+			System.out.println("ATENÇAO - LISTA DE JOGADAS INIMIGAS");
+		}
 		this.board.printPlayableDetails(this.bestPlays, this.board.getCell());
 		System.out.println("ESTADO: " + this.min);
 		System.out.println("Possuo " + sons.size() + " filhos.");
