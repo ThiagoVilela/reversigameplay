@@ -149,16 +149,81 @@ public class Game {
 	public void aiPlays(char alliedCell, char enemyCell, String playerName) {
 		/*** Consigo a árvore de jogadas preenchida ***/
 		MinMaxNode minMaxTree = this.minMax(alliedCell, enemyCell, playerName);
-		Transition bestMove = this.findBestMove(minMaxTree);
-		/*** TO DO - Identificar o bestMove da árvore montada ***/
+		/*** Identificar o bestMove da árvore montada ***/
+		Transition bestMove = this.findBestMoveRoot(minMaxTree);
+		
 		/*** TO DO - Realizar a jogada ***/
+		if (bestMove.initial.get(0).x >= 0 && bestMove.initial.get(0).y >= 0) {
+			/*** Executo a jogada informada pelo jogador ***/
+			ArrayList<Transition> transitions = this.board.findPlayableCells(this.board.getCell(), enemyCell, alliedCell);
+			System.out.println("Turno dx " + playerName);
+			this.board.setCell(this.board.protectedInsertItem(bestMove.initial.get(0).x, bestMove.initial.get(0).y, alliedCell, playerName, transitions, this.board.getCell()));
+		}
+		
+		else {
+			System.out.println("Erro ao identificar a jogada selecionada da IA ");
+		}
+		
 	}
 	
 	/*** Procura a jogada de maior valor na árvore derivada ***/
-	public Transition findBestMove(MinMaxNode tree) {
+	public Transition findBestMoveRoot(MinMaxNode tree) {
 		Transition bestMove = new Transition();
 		/*** Crio um bestMove de valor 0 para comparação ***/
 		bestMove.pointsAdd.add(0);
+		
+		for (int i = 0; i < tree.getSons().size(); i++) {
+			if (tree.getBestSon() == null) {
+				tree.setBestSon(this.findBestMove(tree.getSons().get(i))); //ACHAR O PESO DO MELHOR FILHO
+			}
+			
+			/*** Caso já exista um bestSon ***/
+			else if (tree.getBestSon() != null) {
+				/*** Obtenho a pontuação da jogada feita no bestSon ***/
+				int[] score = tree.getBestSon().getBoard().getScore(tree.getBestSon().getBoard().getCell());
+				int aiBestSonScore = 0;
+				
+				if (this.player2.getPiece() == 'O') {aiBestSonScore = score[0];}
+				else if(this.player2.getPiece() == 'X') {aiBestSonScore = score[1];}
+				else {System.out.println("Erro ao identificar a quem pertence o score");}
+				
+				int aiActualSonScore = -1;
+				MinMaxNode possibleBestSon = this.findBestMove(tree.getSons().get(i));
+				
+				if (possibleBestSon != null) {
+					score = possibleBestSon.getBoard().getScore(tree.getSons().get(i).getBoard().getCell());
+					if (this.player2.getPiece() == 'O') {aiActualSonScore = score[0];}
+					else if(this.player2.getPiece() == 'X') {aiActualSonScore = score[1];}
+					else {System.out.println("Erro ao identificar a quem pertence o score");}
+				}
+				
+				/*** Substituo o novo bestSon pelo nó de maior pontuação  ***/
+				if (aiActualSonScore > aiBestSonScore) {
+					tree.setBestSon(tree.getSons().get(i));
+				}
+			}
+		}
+		
+		/*** Acho a coordenada alterada entre os itens da árvore - em função da peça da IA ***/
+		Coordinate foundCoordinate = (this.findDifferentCoordinate(tree.getBoard().getCell(), 
+																  tree.getBestSon().getBoard().getCell(), 
+																  this.player2.getPiece()));
+		
+		/*** Procuro a coordenada encontrada no vetor de bestPlays ***/
+		for (int j = 0; j < tree.getBestPlays().size(); j++) {
+			if (tree.getBestPlays().get(j).initial.get(0).x == foundCoordinate.x
+				&&	tree.getBestPlays().get(j).initial.get(0).y == foundCoordinate.y) {
+				/*** Retorno a transição desejada ***/
+				return tree.getBestPlays().get(j);
+			}
+		}
+		
+		/*** Retorna a inicial como erro ***/
+		return tree.getBestPlays().get(0);
+	}
+	
+	/*** Encontra o melhor filho e passo ele para o pai ***/
+	public MinMaxNode findBestMove(MinMaxNode tree) {
 		
 		/*** E um elemento favorável a IA ***/
 		if (tree.isMin()) {
@@ -166,44 +231,102 @@ public class Game {
 				for (int i = 0; i < tree.getSons().size(); i++) {
 					/*** Bad call total - Player vai ganhar da IA ***/
 					if (tree.getSons().get(i).getSons().size() == 0) {
-
+						//Retorno para matar o nó e nem processar uma possível vitória da AI
+						return null;
+					}
+					
+					else if (tree.getSons().get(i).getSons().size() > 0) {
+						if (tree.getBestSon() == null) {
+							tree.setBestSon(this.findBestMove(tree.getSons().get(i))); //ACHAR O PESO DO MELHOR FILHO
+						}
+						
+						else if (tree.getBestSon() != null) {
+							/*** Obtenho a pontuação da jogada feita no bestSon ***/
+							int[] score = tree.getBestSon().getBoard().getScore(tree.getBestSon().getBoard().getCell());
+							int aiBestSonScore = 0;
+							
+							if (this.player2.getPiece() == 'O') {aiBestSonScore = score[0];}
+							else if(this.player2.getPiece() == 'X') {aiBestSonScore = score[1];}
+							else {System.out.println("Erro ao identificar a quem pertence o score");}
+							
+							/*** Obtenho a pontuação da jogada feita no possível candidato a bestSon ***/
+							int aiActualSonScore = -1;
+							MinMaxNode possibleBestSon = this.findBestMove(tree.getSons().get(i));
+							
+							if (possibleBestSon != null) {
+								score = possibleBestSon.getBoard().getScore(tree.getSons().get(i).getBoard().getCell());
+								if (this.player2.getPiece() == 'O') {aiActualSonScore = score[0];}
+								else if(this.player2.getPiece() == 'X') {aiActualSonScore = score[1];}
+								else {System.out.println("Erro ao identificar a quem pertence o score");}
+							}
+							
+							/*** Substituo o novo bestSon pelo nó de maior pontuação  ***/
+							if (aiActualSonScore > aiBestSonScore) {
+								tree.setBestSon(tree.getSons().get(i));
+							}
+						}
 					}
 				}
-			} else if(tree.getSons().size() == 0){
 				
+				return tree.getBestSon();
+			} 
+			/*** Não tem mais filhos - pode retornar ***/
+			else if(tree.getSons().size() == 0){
+				return tree;
 			}
 		}
 		
-		/*** E um elemento desfavorável a IA ***/
 		else if(!tree.isMin()) {
 			if (tree.getSons().size() > 0) {
 				for (int i = 0; i < tree.getSons().size(); i++) {
 					/*** Good call - IA vai ganhar do Player ***/
 					if (tree.getSons().get(i).getSons().size() == 0) {
-						/*** Acho a coordenada alterada entre os itens da árvore - em função da peça da IA ***/
-						Coordinate foundCoordinate = (this.findDifferentCoordinate(tree.getBoard().getCell(), 
-																				  tree.getSons().get(i).getBoard().getCell(), 
-																				  this.player2.getPiece()));
+						if (tree.getBestSon() == null) {
+							tree.setBestSon(this.findBestMove(tree.getSons().get(i))); //ACHAR O PESO DO MELHOR FILHO
+						}
 						
-						/*** Procuro a coordenada encontrada no vetor de bestPlays ***/
-						for (int j = 0; j < tree.getBestPlays().size(); j++) {
-							if (tree.getBestPlays().get(j).initial.get(0).x == foundCoordinate.x
-								&&	tree.getBestPlays().get(j).initial.get(0).y == foundCoordinate.y) {
-								/*** Retorno a transição desejada ***/
-								return tree.getBestPlays().get(j);
+						else if (tree.getBestSon() != null) {
+							/*** Obtenho a pontuação da jogada feita no bestSon ***/
+							int[] score = tree.getBestSon().getBoard().getScore(tree.getBestSon().getBoard().getCell());
+							int aiBestSonScore = 0;
+							
+							if (this.player2.getPiece() == 'O') {aiBestSonScore = score[0];}
+							else if(this.player2.getPiece() == 'X') {aiBestSonScore = score[1];}
+							else {System.out.println("Erro ao identificar a quem pertence o score");}
+							
+							/*** Obtenho a pontuação da jogada feita no possível candidato a bestSon ***/
+							int aiActualSonScore = -1;
+							MinMaxNode possibleBestSon = this.findBestMove(tree.getSons().get(i));
+							
+							if (possibleBestSon != null) {
+								score = possibleBestSon.getBoard().getScore(tree.getSons().get(i).getBoard().getCell());
+								if (this.player2.getPiece() == 'O') {aiActualSonScore = score[0];}
+								else if(this.player2.getPiece() == 'X') {aiActualSonScore = score[1];}
+								else {System.out.println("Erro ao identificar a quem pertence o score");}
 							}
+							
+							/*** Substituo o novo bestSon pelo nó de maior pontuação  ***/
+							if (aiActualSonScore > aiBestSonScore) {
+								tree.setBestSon(tree.getSons().get(i));
+							}
+							
 						}
 					}
+					
+					else if (tree.getSons().get(i).getSons().size() > 0) {
+						this.findBestMove(tree.getSons().get(i));
+					}
 				}
+				return tree.getBestSon();
 			} 
 			/*** Entrou em um caso que o advesário ganha da IA antes do final ***/
 			else if(tree.getSons().size() == 0){
-				
+				return null;
 			}
 		}
 		
-		
-		return bestMove;
+		System.out.println("Erro ao identificar elementos MIN ou MAX na árvore pós montada ");
+		return new MinMaxNode();
 	}
 	
 	/*** Encontra a coordenada alterada do antigo board pro novo ***/

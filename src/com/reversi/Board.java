@@ -523,6 +523,26 @@ public class Board {
 			System.out.println();
 		}
 	}
+	
+	/*** Verifica o score do jogo ***/
+	public int[] getScore(Cell[][] matrix) {
+		int[] score = new int[2];
+		score[0] = 0;
+		score[1] = 0;
+		
+		for (int i = 0; i < matrix.length; i++) {
+			for (int j = 0; j < matrix[i].length; j++) {
+				if (matrix[i][j].content == 'O') {
+					score[0]++;
+				}
+				else if (matrix[i][j].content == 'X') {
+					score[1]++;
+				}
+			}
+		}
+		
+		return score;
+	}
 
 	/***************************** GET'N SET *****************************/
 	public Cell[][] getCell() {
@@ -618,7 +638,7 @@ public class Board {
 		game.getBoard().resetBoard();
 		game.setPlayer1(new Player("Thiago", 'O'));
 		game.setPlayer2(new Player("Adalberto", 'X'));
-		game.minMax('X', 'O', "ADALBERTO");
+		game.aiPlays('X', 'O', "ADALBERTO");
 		
 		//board.setCell(board.protectedInsertItem(7, 7, 'O', "Humano", transitions, board.getCell()));
 		//board.printBoard(board.getCell());

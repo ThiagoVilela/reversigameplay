@@ -12,7 +12,10 @@ public class MinMaxNode {
 	private ArrayList<MinMaxNode> sons = new ArrayList<MinMaxNode>();
 	/*** Indicador de MIN ou MAX ***/
 	private boolean min;
-	
+	/*** Indicador de MIN ou MAX ***/
+	private MinMaxNode bestSon = null;
+
+
 	/***************************** METODOS *****************************/
 	/*** Imprime todo o conteúdo do nó ***/
 	public void printNodeContent() {
@@ -55,6 +58,11 @@ public class MinMaxNode {
 	public void setMin(boolean min) {
 		this.min = min;
 	}
-	
-	
+	public MinMaxNode getBestSon() {
+		return bestSon;
+	}
+
+	public void setBestSon(MinMaxNode bestSon) {
+		this.bestSon = bestSon;
+	}
 }
