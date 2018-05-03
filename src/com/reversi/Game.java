@@ -148,9 +148,80 @@ public class Game {
 	/*** Opção de jogo para a IA ***/
 	public void aiPlays(char alliedCell, char enemyCell, String playerName) {
 		/*** Consigo a árvore de jogadas preenchida ***/
-		MinMaxNode analysisTree = this.minMax(alliedCell, enemyCell, playerName);
+		MinMaxNode minMaxTree = this.minMax(alliedCell, enemyCell, playerName);
+		Transition bestMove = this.findBestMove(minMaxTree);
+		/*** TO DO - Identificar o bestMove da árvore montada ***/
+		/*** TO DO - Realizar a jogada ***/
+	}
+	
+	/*** Procura a jogada de maior valor na árvore derivada ***/
+	public Transition findBestMove(MinMaxNode tree) {
+		Transition bestMove = new Transition();
+		/*** Crio um bestMove de valor 0 para comparação ***/
+		bestMove.pointsAdd.add(0);
+		
+		/*** E um elemento favorável a IA ***/
+		if (tree.isMin()) {
+			if (tree.getSons().size() > 0) {
+				for (int i = 0; i < tree.getSons().size(); i++) {
+					/*** Bad call total - Player vai ganhar da IA ***/
+					if (tree.getSons().get(i).getSons().size() == 0) {
+
+					}
+				}
+			} else if(tree.getSons().size() == 0){
+				
+			}
+		}
+		
+		/*** E um elemento desfavorável a IA ***/
+		else if(!tree.isMin()) {
+			if (tree.getSons().size() > 0) {
+				for (int i = 0; i < tree.getSons().size(); i++) {
+					/*** Good call - IA vai ganhar do Player ***/
+					if (tree.getSons().get(i).getSons().size() == 0) {
+						/*** Acho a coordenada alterada entre os itens da árvore - em função da peça da IA ***/
+						Coordinate foundCoordinate = (this.findDifferentCoordinate(tree.getBoard().getCell(), 
+																				  tree.getSons().get(i).getBoard().getCell(), 
+																				  this.player2.getPiece()));
+						
+						/*** Procuro a coordenada encontrada no vetor de bestPlays ***/
+						for (int j = 0; j < tree.getBestPlays().size(); j++) {
+							if (tree.getBestPlays().get(j).initial.get(0).x == foundCoordinate.x
+								&&	tree.getBestPlays().get(j).initial.get(0).y == foundCoordinate.y) {
+								/*** Retorno a transição desejada ***/
+								return tree.getBestPlays().get(j);
+							}
+						}
+					}
+				}
+			} 
+			/*** Entrou em um caso que o advesário ganha da IA antes do final ***/
+			else if(tree.getSons().size() == 0){
+				
+			}
+		}
 		
 		
+		return bestMove;
+	}
+	
+	/*** Encontra a coordenada alterada do antigo board pro novo ***/
+	public Coordinate findDifferentCoordinate(Cell[][] board, Cell[][] newBoard, char wantedPiece) {
+		for (int i = 0; i < board.length; i++) {
+			for (int j = 0; j < board[i].length; j++) {
+				if(board[i][j].content == '_' && newBoard[i][j].content == wantedPiece) {
+					return new Coordinate(i,j);
+				}
+			}
+		}
+		return null;
+	}
+	
+	/************** Encontro o estado MIN ou MAX do estado folha da árvore **************/	
+	public boolean leafMinOrMax(MinMaxNode tree) {
+		/*** TO DO ***/
+		return true;
 	}
 	
 	/*** Realiza o minMax ***/
@@ -344,12 +415,6 @@ public class Game {
 		
 		
 		return tree;
-	}
-	
-	/************** Encontro o estado MIN ou MAX do estado folha da árvore **************/	
-	public boolean leafMinOrMax(MinMaxNode tree) {
-		/*** TO DO ***/
-		return true;
 	}
 	
 	/************** Imprimo o conteúdo da árvore **************/	
