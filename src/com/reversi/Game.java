@@ -159,9 +159,25 @@ public class Game {
 	/*** Realiza o minMax ***/
 	public void minMax(ArrayList<Transition> transitions) {
 		/*** Chama o alphaBeta para poder "podar" a quantidade de possibilidades derivadas no MinMax ***/
+		
+		/************** MIN MIN MIN MIN MIN MIN MIN MIN MIN MIN MIN MIN MIN MIN MIN MIN MIN **************/
 		/*** Resultado implica no resultado do MIN ***/
-		//Transition bestPlay = this.alphaBeta(transitions);
-		//ArrayList<Board> maxBoards 
+		ArrayList<Transition> bestPlays = this.alphaBeta(transitions);
+		
+		/*** Crio um vetor de boards para simular as jogadas obtidas no bestPlays ***/
+		Board[] boards = new Board[bestPlays.size()];
+		for (int i = 0; i < boards.length; i++) {
+			boards[i] = this.board;
+			boards[i].setCell(boards[i].insertItem(bestPlays.get(i).initial.get(0).x, 
+												   bestPlays.get(i).initial.get(0).y, 
+												   this.player2.getPiece(), 
+												   this.player2.getName(), 
+												   boards[i].getCell())
+												   );
+		}
+		
+		/************** MAX MAX MAX MAX MAX MAX MAX MAX MAX MAX MAX MAX MAX MAX MAX MAX MAX **************/
+		
 		
 	}
 	
@@ -196,7 +212,7 @@ public class Game {
 			}
 		}
 		
-		/*** Imprime  ***/
+		/*** Imprime o resultado obtido para testes ***/
 		this.printAlphaBetaResult(bestTransitions);
 		
 		return bestTransitions;
