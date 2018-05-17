@@ -190,12 +190,12 @@ public class HumanGameScreen {
 								ArrayList<Transition> transitions = Game.board.findPlayableCells(Game.board.getCell(), Game.player2.getPiece(), Game.player1.getPiece());
 								
 								Board newBoard = new Board();
-								newBoard.setCell(Game.board.getCell());
+								newBoard.setCell(newBoard.transferBoardContent(Game.board.getCell()));
 								
 								Game.board.setCell(Game.board.protectedInsertItem(linhas, colunas, Game.player1.getPiece(), Game.player1.getName(), transitions, Game.board.getCell()));
 								
 								
-								if (!newBoard.isBoardEqualAnotherBoard(newBoard.getCell(), Game.board.getCell())) {
+								if (newBoard.isBoardDifferentAnotherBoard(newBoard.getCell(), Game.board.getCell())) {
 									Game.playerPlaying++;
 									
 									HumanGameScreen window = new HumanGameScreen();
@@ -212,10 +212,10 @@ public class HumanGameScreen {
 								ArrayList<Transition> transitions = Game.board.findPlayableCells(Game.board.getCell(), Game.player1.getPiece(), Game.player2.getPiece());
 								
 								Board newBoard = new Board();
-								newBoard.setCell(Game.board.getCell());
+								newBoard.setCell(newBoard.transferBoardContent(Game.board.getCell()));
 								Game.board.setCell(Game.board.protectedInsertItem(linhas, colunas, Game.player2.getPiece(), Game.player2.getName(), transitions, Game.board.getCell()));
 								
-								if (!newBoard.isBoardEqualAnotherBoard(newBoard.getCell(), Game.board.getCell())) {
+								if (newBoard.isBoardDifferentAnotherBoard(newBoard.getCell(), Game.board.getCell())) {
 									Game.playerPlaying--;
 									
 									HumanGameScreen window = new HumanGameScreen();

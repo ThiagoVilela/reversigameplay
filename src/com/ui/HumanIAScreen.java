@@ -23,7 +23,7 @@ public class HumanIAScreen {
 	private JTextField jogadaLinhaField;
 	private JTextField jogadaColunaField;
 	protected Object frame;
-	public static boolean wrongPlay = false;
+	public static boolean iaWillPlay = false;
 
 	/**
 	 * Launch the application.
@@ -59,14 +59,11 @@ public class HumanIAScreen {
 		humanIAScreenFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		humanIAScreenFrame.getContentPane().setLayout(null);
 
-		int paddingLeft = 220;
-		int paddingTop = 55;
-
-		if (Game.playerPlaying == 2 && !wrongPlay) {
+		/*** Momento que IA joga ***/
+		if (Game.playerPlaying == 2 && HumanIAScreen.iaWillPlay == true) {
 			/*** Consigo a árvore de jogadas preenchida ***/
 			MinMaxNode minMaxTree = Game.minMax(Game.player2.getPiece(), Game.player1.getPiece(), Game.player2.getName());
 			/*** Identificar o bestMove da árvore montada ***/
-			System.out.println("VOU ENTRAR NA AIPLAYS!");
 			Transition bestMove = Game.findBestMoveRoot(minMaxTree);
 
 			/*** TO DO - Realizar a jogada ***/
@@ -77,15 +74,22 @@ public class HumanIAScreen {
 				Game.board.setCell(Game.board.protectedInsertItem(bestMove.initial.get(0).x, bestMove.initial.get(0).y, Game.player2.getPiece(), Game.player2.getName(), transitions2, Game.board.getCell()));
 
 				Game.playerPlaying--;
+				HumanIAScreen.iaWillPlay = false;
 			}
 
 			else {
 				//Aqui tem de exibir um label de erro
-				System.out.println("ERRO IA JOGANDO");
+				System.err.println("Erro a identificar ao jogar o melhor movimento da IA");
 			}
+		}
+		else {
+			System.out.println("IA NAO VAI JOGAR AGORA NAO BENHE!");
 		}
 
 		/*** INICIO - Impressão do tabuleiro ***/
+		int paddingLeft = 220;
+		int paddingTop = 55;
+		
 		JLabel lblMatrizTop = new JLabel(Game.board.saveStringBoard(Game.board.getCell()));
 		lblMatrizTop.setFont(new Font("Tahoma", Font.PLAIN, 19));
 		lblMatrizTop.setBounds(paddingLeft, paddingTop, 550, 100);
@@ -209,21 +213,25 @@ public class HumanIAScreen {
 								ArrayList<Transition> transitions = Game.board.findPlayableCells(Game.board.getCell(), Game.player2.getPiece(), Game.player1.getPiece());
 
 								Board newBoard = new Board();
-								newBoard.setCell(Game.board.getCell());
+								newBoard.setCell(newBoard.transferBoardContent(Game.board.getCell()));
+								newBoard.printBoard(newBoard.getCell());
 
 								Game.board.setCell(Game.board.protectedInsertItem(linhas, colunas, Game.player1.getPiece(), Game.player1.getName(), transitions, Game.board.getCell()));
-
-
-								if (!newBoard.isBoardEqualAnotherBoard(newBoard.getCell(), Game.board.getCell())) {
+								Game.board.printBoard(Game.board.getCell());
+								
+								if (newBoard.isBoardDifferentAnotherBoard(newBoard.getCell(), Game.board.getCell())) {
+									System.out.println("MEU BOARD E DIFERENTE! E VOU JOGAR");
+											
 									Game.playerPlaying++;
-
+									HumanIAScreen.iaWillPlay = true;
+									
 									HumanIAScreen window = new HumanIAScreen();
 									window.humanIAScreenFrame.setVisible(true);
 									humanIAScreenFrame.dispose();
 								}
 
 								else {
-									wrongPlay = true;
+									System.out.println("NAO CONSEGUI INSERIR");
 									//Aqui tem de exibir um label de erro
 								}
 

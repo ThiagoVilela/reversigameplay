@@ -571,15 +571,30 @@ public class Board {
 	}
 	
 	/*** Verifico se um Tabuleiro é diferente do outro ***/
-	public boolean isBoardEqualAnotherBoard(Cell[][] board, Cell[][] board2) {
+	public boolean isBoardDifferentAnotherBoard(Cell[][] board, Cell[][] board2) {
 		for (int i = 0; i < board.length; i++) {
 			for (int j = 0; j < board[i].length; j++) {
 				if (board[i][j].content != board2[i][j].content) {
+					System.out.println(board[i][j].content + " é diferente de " + board2[i][j].content);
 					return true;
 				}
 			}
 		}
 		return false;
+	}
+	
+	/*** Transfiro o conteúdo de um Table para outro ***/
+	public Cell[][] transferBoardContent(Cell[][] board) {
+		Cell[][] newBoard = new Cell[SIZE][SIZE];
+		
+		for (int i = 0; i < board.length; i++) {
+			for (int j = 0; j < board[i].length; j++) {
+				newBoard[i][j] = new Cell();
+				newBoard[i][j].content = board[i][j].content;
+			}
+		}
+		
+		return newBoard;
 	}
 
 	/*** "Limpa" a tela ***/
