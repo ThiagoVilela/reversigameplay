@@ -8,23 +8,23 @@ public class Game {
 	public static Board board = new Board();
 	public static Player player1;
 	public static Player player2;
-	
+
 	/*** Variáveis estáticas para linkar com a interface ***/
 	public static int LEVEL = 1;
 	public static String namePlayer1 = "";
 	public static String namePlayer2 = "";
-	
+
 	public static int playerPlaying = 1;
 
 	/****************************** MÉTODOS ******************************/
 	/*** Starto o jogo ***/
 	public void startGame(int configuration) {
-		
+
 		/*** Opção Human x Human ***/
 		if (configuration == 0) {
 			/*** Reseto o tabuleiro ***/
 			Game.board.resetBoard();
-			
+
 			/*** Seto as características dos jogadores ***/
 			Game.player1 = new Player(Game.namePlayer1, 'O', 2);
 			Game.player2 = new Player(Game.namePlayer2, 'X', 2);
@@ -72,7 +72,7 @@ public class Game {
 		else if(configuration == 1) {
 			/*** Reseto o tabuleiro ***/
 			Game.board.resetBoard();
-			
+
 			/*** Seto as características dos jogadores ***/
 			Game.player1 = new Player(Game.namePlayer1, 'O');
 			Game.player2 = new Player("Adalberto", 'X');
@@ -124,7 +124,7 @@ public class Game {
 			ArrayList<Transition> transitions = Game.board.findPlayableCells(Game.board.getCell(), enemyCell, alliedCell);
 			System.out.println("Turno dx " + playerName);
 			Game.board.printPlayableCells(transitions, Game.board.getCell());
-			
+
 			/*** Leitura via teclado - ARRUMAR ESSE ERRO INFERNO DE NEXTINT ***/
 			Scanner in = new Scanner(System.in);
 			System.out.print("Digite a linha de sua jogada: ");
@@ -138,7 +138,7 @@ public class Game {
 				y = in.nextInt();
 			}
 			in.close();
-			
+
 			if (x >= 0 && y >= 0) {
 				/*** Executo a jogada informada pelo jogador ***/
 				Game.board.setCell(Game.board.protectedInsertItem(x, y, alliedCell, playerName, transitions, Game.board.getCell()));
@@ -150,15 +150,15 @@ public class Game {
 		}
 
 	}
-	
+
 	/*** Opção de jogo para a IA ***/
 	public static void aiPlays(char alliedCell, char enemyCell, String playerName) {
 		/*** Consigo a árvore de jogadas preenchida ***/
 		MinMaxNode minMaxTree = Game.minMax(alliedCell, enemyCell, playerName);
+
 		/*** Identificar o bestMove da árvore montada ***/
-		System.out.println("VOU ENTRAR NA AIPLAYS!");
 		Transition bestMove = Game.findBestMoveRoot(minMaxTree);
-		
+
 		/*** TO DO - Realizar a jogada ***/
 		if (bestMove.initial.get(0).x >= 0 && bestMove.initial.get(0).y >= 0) {
 			/*** Executo a jogada informada pelo jogador ***/
@@ -167,13 +167,13 @@ public class Game {
 			Game.board.setCell(Game.board.protectedInsertItem(bestMove.initial.get(0).x, bestMove.initial.get(0).y, alliedCell, playerName, transitions, Game.board.getCell()));
 			Game.board.printBoard(Game.board.getCell());
 		}
-		
+
 		else {
 			System.out.println("Erro ao identificar a jogada selecionada da IA ");
 		}
-		
+
 	}
-	
+
 	/*** Procura a jogada de maior valor na árvore derivada ***/
 	public static Transition findBestMoveRoot(MinMaxNode tree) {
 		System.out.println();
@@ -183,42 +183,45 @@ public class Game {
 		Transition bestMove = new Transition();
 		/*** Crio um bestMove de valor 0 para comparação ***/
 		bestMove.pointsAdd.add(0);
-		
+
 		for (int i = 0; i < tree.getSons().size(); i++) {
 			if (tree.getBestSon() == null) {
 				System.out.println("Vou tentar adicionar o melhor filho da raiz pica");
 				tree.setBestSon(Game.findBestMove(tree.getSons().get(i))); //ACHAR O PESO DO MELHOR FILHO
 				System.out.println("Voltei pra ROOTS");
 				if(tree.getBestSon() == null ) {System.out.println("Tentei adicionar o melhor filho da raiz pica");}
-				else {System.out.println();
-				System.out.println();
-				System.out.println();System.out.println("ADICIONEI UM FILHO PICA 2FLAY NA ROTS!");
-				System.out.println();
-				System.out.println();
-				System.out.println();}
+				else {
+					System.out.println();
+					System.out.println();
+					System.out.println();
+					System.out.println("ADICIONEI UM FILHO PICA 2FLAY NA ROTS!");
+					System.out.println();
+					System.out.println();
+					System.out.println();
+				}
 			}
-			
+
 			/*** Caso já exista um bestSon ***/
 			else if (tree.getBestSon() != null) {
 				System.out.println("VOU COMPARAR O POSSIVEL NOVO BESTSON ROOTS COM O ATUAL");
 				/*** Obtenho a pontuação da jogada feita no bestSon ***/
 				int[] score = tree.getBestSon().getBoard().getScore(tree.getBestSon().getBoard().getCell());
 				int aiBestSonScore = 0;
-				
+
 				if (Game.player2.getPiece() == 'O') {aiBestSonScore = score[0];}
 				else if(Game.player2.getPiece() == 'X') {aiBestSonScore = score[1];}
 				else {System.out.println("Erro ao identificar a quem pertence o score");}
-				
+
 				int aiActualSonScore = -1;
 				MinMaxNode possibleBestSon = Game.findBestMove(tree.getSons().get(i));
-				
+
 				if (possibleBestSon != null) {
 					score = possibleBestSon.getBoard().getScore(tree.getSons().get(i).getBoard().getCell());
 					if (Game.player2.getPiece() == 'O') {aiActualSonScore = score[0];}
 					else if(Game.player2.getPiece() == 'X') {aiActualSonScore = score[1];}
 					else {System.out.println("Erro ao identificar a quem pertence o score");}
 				}
-				
+
 				/*** Substituo o novo bestSon pelo nó de maior pontuação  ***/
 				if (aiActualSonScore > aiBestSonScore) {
 					System.out.println("COMPAREI E TROQUEI O BEST SON DO ROOTS!");
@@ -228,52 +231,40 @@ public class Game {
 				}
 			}
 		}
-		
+
 		if (tree.getBestSon() != null) {
 			System.out.println("ENTREI PRA CALCULAR OS ROLE E O MEU ROOTS TEM UM MELHOR!");
 			/*** Acho a coordenada alterada entre os itens da árvore - em função da peça da IA ***/
 			ArrayList<Coordinate> foundCoordinate = (Game.findDifferentCoordinate(tree.getBoard().getCell(), 
-																	  tree.getBestSon().getBoard().getCell(), 
-																	  Game.player2.getPiece()));
-			
+					tree.getBestSon().getBoard().getCell(), 
+					Game.player2.getPiece()));
+
 			/*** Procuro a coordenada encontrada no vetor de bestPlays ***/
 			for (int j = 0; j < tree.getBestPlays().size(); j++) {
 				for (int j2 = 0; j2 < foundCoordinate.size(); j2++) {
 					if (tree.getBestPlays().get(j).initial.get(0).x == foundCoordinate.get(j2).x
 							&&	tree.getBestPlays().get(j).initial.get(0).y == foundCoordinate.get(j2).y) {
-							/*** Retorno a transição desejada ***/
-							System.out.println();
-							System.out.println();
-							System.out.println();
-							System.out.println();
-							System.out.println();
-							System.out.println("Estou retornando sem erros!");
-							System.out.println();
-							System.out.println();
-							System.out.println();
-							System.out.println();
-							System.out.println();
-							return tree.getBestPlays().get(j);
-						}
+						/*** Retorno a transição desejada ***/
+						System.out.println();
+						System.out.println();
+						System.out.println("Estou retornando sem erros!");
+						System.out.println();
+						System.out.println();
+						return tree.getBestPlays().get(j);
+					}
 				}
 			}
 		}
-		
+
 		/*** Retorna a inicial como erro ***/
-		System.out.println();
-		System.out.println();
-		System.out.println();
 		System.out.println();
 		System.out.println();
 		System.out.println("VOU RETORNAR A PADRAO COMO ERRO");
 		System.out.println();
 		System.out.println();
-		System.out.println();
-		System.out.println();
-		System.out.println();
 		return tree.getBestPlays().get(0);
 	}
-	
+
 	/*** Encontra o melhor filho e passo ele para o pai ***/
 	public static MinMaxNode findBestMove(MinMaxNode tree) {
 		System.out.println("TO NA FIND NUTELLA");
@@ -284,43 +275,43 @@ public class Game {
 				for (int i = 0; i < tree.getSons().size(); i++) {
 					/*** Bad call total - Player vai ganhar da IA ***/
 					if (tree.getSons().get(i).getSons().size() == 0) {
-						//Retorno para matar o nó e nem processar uma possível vitória da AI
+						//Retorno para matar o nó e nem processar uma possível vitória do Player
 						return null;
 					}
-					
+
 					else if (tree.getSons().get(i).getSons().size() > 0) {
 						if (tree.getBestSon() == null) {
 							System.out.println("VOU TENTAR ADD UM FILHO NA NUTELLA MIN");
 							tree.setBestSon(Game.findBestMove(tree.getSons().get(i))); //ACHAR O PESO DO MELHOR FILHO
 							System.out.println("Voltei pra NUTELLA MIN");
-							if(tree.getBestSon() == null ) {System.out.println("Tentei adicionar o melhor filho da raiz nutella");}
+							if(tree.getBestSon() == null) {System.out.println("Tentei adicionar o melhor filho da raiz nutella");}
 							else {System.out.println("ADICIONEI UM FILHO NUTELLA MIN 2FLAY!");}
 							System.out.println();
 							System.out.println();
 							System.out.println();
 						}
-						
+
 						else if (tree.getBestSon() != null) {
 							System.out.println("VOU COMPARAR O POSSIVEL NOVO BESTSON MIN COM O ATUAL");
 							/*** Obtenho a pontuação da jogada feita no bestSon ***/
 							int[] score = tree.getBestSon().getBoard().getScore(tree.getBestSon().getBoard().getCell());
 							int aiBestSonScore = 0;
-							
+
 							if (Game.player2.getPiece() == 'O') {aiBestSonScore = score[0];}
 							else if(Game.player2.getPiece() == 'X') {aiBestSonScore = score[1];}
 							else {System.out.println("Erro ao identificar a quem pertence o score");}
-							
+
 							/*** Obtenho a pontuação da jogada feita no possível candidato a bestSon ***/
 							int aiActualSonScore = -1;
 							MinMaxNode possibleBestSon = Game.findBestMove(tree.getSons().get(i));
-							
+
 							if (possibleBestSon != null) {
 								score = possibleBestSon.getBoard().getScore(tree.getSons().get(i).getBoard().getCell());
 								if (Game.player2.getPiece() == 'O') {aiActualSonScore = score[0];}
 								else if(Game.player2.getPiece() == 'X') {aiActualSonScore = score[1];}
 								else {System.out.println("Erro ao identificar a quem pertence o score");}
 							}
-							
+
 							/*** Substituo o novo bestSon pelo nó de maior pontuação  ***/
 							if (aiActualSonScore > aiBestSonScore) {
 								System.out.println("COMPAREI E TROQUEI O BEST SON DO MIN!");
@@ -332,11 +323,11 @@ public class Game {
 							System.out.println();
 							System.out.println();
 							System.out.println();
-							
+
 						}
 					}
 				}
-				
+
 				return tree.getBestSon();
 			} 
 			/*** Não tem mais filhos - pode retornar ***/
@@ -345,7 +336,7 @@ public class Game {
 				return tree;
 			}
 		}
-		
+
 		else if(!tree.isMin()) {
 			System.out.println("ESTOU NUM ITEM MAX MAX MAX MAX");
 			if (tree.getSons().size() > 0) {
@@ -359,28 +350,28 @@ public class Game {
 							if(tree.getBestSon() == null ) {System.out.println("Tentei adicionar o melhor filho da raiz nutella");}
 							else {System.out.println("ADICIONEI UM FILHO NUTELLA MAX 2FLAY!");}
 						}
-						
+
 						else if (tree.getBestSon() != null) {
 							System.out.println("VOU COMPARAR O POSSIVEL NOVO BESTSON MAX COM O ATUAL");
 							/*** Obtenho a pontuação da jogada feita no bestSon ***/
 							int[] score = tree.getBestSon().getBoard().getScore(tree.getBestSon().getBoard().getCell());
 							int aiBestSonScore = 0;
-							
+
 							if (Game.player2.getPiece() == 'O') {aiBestSonScore = score[0];}
 							else if(Game.player2.getPiece() == 'X') {aiBestSonScore = score[1];}
 							else {System.out.println("Erro ao identificar a quem pertence o score");}
-							
+
 							/*** Obtenho a pontuação da jogada feita no possível candidato a bestSon ***/
 							int aiActualSonScore = -1;
 							MinMaxNode possibleBestSon = Game.findBestMove(tree.getSons().get(i));
-							
+
 							if (possibleBestSon != null) {
 								score = possibleBestSon.getBoard().getScore(tree.getSons().get(i).getBoard().getCell());
 								if (Game.player2.getPiece() == 'O') {aiActualSonScore = score[0];}
 								else if(Game.player2.getPiece() == 'X') {aiActualSonScore = score[1];}
 								else {System.out.println("Erro ao identificar a quem pertence o score");}
 							}
-							
+
 							/*** Substituo o novo bestSon pelo nó de maior pontuação  ***/
 							if (aiActualSonScore > aiBestSonScore) {
 								System.out.println("COMPAREI E TROQUEI O BEST SON DO MAX!");
@@ -391,10 +382,10 @@ public class Game {
 							System.out.println();
 							System.out.println();
 							System.out.println();
-							
+
 						}
 					}
-					
+
 					else if (tree.getSons().get(i).getSons().size() > 0) {
 						// Implementar para dificuldades maiores que 1
 					}
@@ -407,15 +398,15 @@ public class Game {
 				return null;
 			}
 		}
-		
+
 		System.out.println("Erro ao identificar elementos MIN ou MAX na árvore pós montada ");
 		return new MinMaxNode();
 	}
-	
+
 	/*** Encontra a coordenada alterada do antigo board pro novo ***/
 	public static ArrayList<Coordinate> findDifferentCoordinate(Cell[][] board, Cell[][] newBoard, char wantedPiece) {
 		ArrayList<Coordinate> validCoordinates = new ArrayList<Coordinate>();
-		
+
 		for (int i = 0; i < board.length; i++) {
 			for (int j = 0; j < board[i].length; j++) {
 				if(board[i][j].content == '_' && newBoard[i][j].content == wantedPiece) {
@@ -425,13 +416,7 @@ public class Game {
 		}
 		return validCoordinates;
 	}
-	
-	/************** Encontro o estado MIN ou MAX do estado folha da árvore **************/	
-	public boolean leafMinOrMax(MinMaxNode tree) {
-		/*** TO DO ***/
-		return true;
-	}
-	
+
 	/*** Realiza o minMax ***/
 	public static MinMaxNode minMax(char alliedCell, char enemyCell, String playerName) {
 		System.out.println();
@@ -441,22 +426,22 @@ public class Game {
 		System.out.println();
 		/*** Crio a árvore para lógica do MINMAX ***/
 		MinMaxNode treeRoot = new MinMaxNode();
-		
+
 		/************** MAX MAX MAX MAX MAX MAX MAX MAX MAX MAX MAX MAX MAX MAX MAX MAX MAX **************/
 		/*** Apresento o tabuleiro com as possíveis jogadas para o jogador ***/
 		ArrayList<Transition> transitions = Game.board.findPlayableCells(Game.board.getCell(), enemyCell, alliedCell);
 		//Game.board.printPlayableCells(transitions, Game.board.getCell());
 		System.out.println("Turno dx " + playerName);
-		
+
 		/*** Chama o alphaBeta para poder "podar" a quantidade de possibilidades derivadas no MinMax ***/
 		ArrayList<Transition> bestPlays = Game.alphaBeta(transitions);
-		
+
 		/*** Atribuição dos elementos do nó raíz da árvore MINMAX ***/
 		treeRoot.setBoard(Game.board); //Atribuo o Board atual no nó raíz da árvore
 		treeRoot.setBestPlays(bestPlays); //Atribuo a leitura do quadro atual (jogo real) ao nó raíz da árvore
 		treeRoot.setMin(false); //Atribuo false no MIN (true no MAX por tabela)
 		treeRoot.setSons(new ArrayList<MinMaxNode>()); //Inicializo o vetor de filhos
-		
+
 		/*** Faço simulações individuais de cada elemento no bestPlays - e salvo em filhos no nó raiz ***/
 		/************** MIN MIN MIN MIN MIN MIN MIN MIN MIN MIN MIN MIN MIN MIN MIN MIN MIN **************/
 		for (int i = 0; i < treeRoot.getBestPlays().size(); i++) {
@@ -470,34 +455,34 @@ public class Game {
 					newBoard.cell[j][j2].content = treeRoot.getBoard().cell[j][j2].content;
 				}
 			}
-			
+
 			//Faço as inserções neste novo tabuleiro baseado no bestPlays
 			newBoard.setCell(newBoard.protectedInsertItem(bestPlays.get(i).initial.get(0).x, 
-														  bestPlays.get(i).initial.get(0).y, 
-														  Game.player2.getPiece(), 
-														  Game.player2.getName(), 
-														  transitions, 
-														  newBoard.getCell())); 
-			
+					bestPlays.get(i).initial.get(0).y, 
+					Game.player2.getPiece(), 
+					Game.player2.getName(), 
+					transitions, 
+					newBoard.getCell())); 
+
 			//Acho as novas possíveis transições sobre esse novo tabuleiro - considerando a visão do Player1
 			ArrayList<Transition> newBoardTransitions = newBoard.findPlayableCells(newBoard.getCell(), 
 					Game.player2.getPiece(), 
 					Game.player1.getPiece());
-			
+
 			// Não crio um novo vetor de bestPlays baseado nas novas transições possíveis - porque deve analisar todas as jogadas inimigas
 			//ArrayList<Transition> newBestPlays = Game.alphaBeta(newBoardTransitions); 
-			
+
 			MinMaxNode son = new MinMaxNode();
 			son.setBoard(newBoard); //Atribuo o board imaginário alterado no nó raíz da árvore
 			son.setBestPlays(newBoardTransitions); //Atribuo a leitura do novo quadro imaginário - depois do nó raíz da árvore
 			son.setMin(!treeRoot.isMin()); //Atribuo o contrário do MIN (sempre invertido)
 			son.setSons(new ArrayList<MinMaxNode>()); //Inicializo o vetor de filhos
-			
+
 			treeRoot.getSons().add(son); //Adiciono o novo filho construído para a árvore
 		}
-		
+
 		Game.printTree(treeRoot);
-		
+
 		/************** Chamo a função recursivamente para alteração da árvore **************/
 		/************** O mínimo necessário para fazer um MINMAX básico são 4 níveis (0 a 3) **************/
 		/************** Sendo assim - o usuário poderá escolher o nível de dificuldade da IA **************/
@@ -505,25 +490,20 @@ public class Game {
 		for (int i = 0; i < 2*Game.LEVEL; i++) {
 			treeRoot = Game.continueMinMax(treeRoot);
 		}
-		
-		//treeRoot = Game.continueMinMax(treeRoot);
-		
+
 		Game.printTree(treeRoot);
-		
+
 		return treeRoot;
 	}
-	
+
 	/************** Faço os dois passos finais (que podem ser recursivos) do MINMAX **************/
 	public static MinMaxNode continueMinMax(MinMaxNode tree) {
 		System.out.println();
 		System.out.println();
-		System.out.println();
-		
 		System.out.println("ENTREI NO CONTINUE MINMAX");
-		
 		System.out.println();
 		System.out.println();
-		System.out.println();
+
 		/*** Caso a lista de filhos NAO esteja vazia ***/
 		if (tree.getSons().size() > 0) {
 			for (int i = 0; i < tree.getSons().size(); i++) {
@@ -547,32 +527,32 @@ public class Game {
 							newBoard.cell[j][j2].content = tree.getBoard().cell[j][j2].content;
 						}
 					}
-					
+
 					//Faço as inserções neste novo tabuleiro baseado no bestPlays
 					newBoard.setCell(newBoard.protectedInsertItem(tree.getBestPlays().get(i).initial.get(0).x, 
-																  tree.getBestPlays().get(i).initial.get(0).y, 
-																  Game.player2.getPiece(), 
-																  Game.player2.getName(), 
-																  tree.getBestPlays(), 
-																  newBoard.getCell())); 
-					
+							tree.getBestPlays().get(i).initial.get(0).y, 
+							Game.player2.getPiece(), 
+							Game.player2.getName(), 
+							tree.getBestPlays(), 
+							newBoard.getCell())); 
+
 					//Acho as novas possíveis transições sobre esse novo tabuleiro - considerando a visão da IA
 					ArrayList<Transition> newBoardTransitions = newBoard.findPlayableCells(newBoard.getCell(), 
 							Game.player2.getPiece(), 
 							Game.player1.getPiece());
-					
+
 					// Crio um novo vetor de bestPlays baseado nas novas transições possíveis - porque deve analisar todas as jogadas inimigas
 					ArrayList<Transition> newBestPlays = Game.alphaBeta(newBoardTransitions); 
-					
+
 					MinMaxNode son = new MinMaxNode();
 					son.setBoard(newBoard); //Atribuo o board imaginário alterado no nó raíz da árvore
 					son.setBestPlays(newBestPlays); //Atribuo a leitura do novo quadro imaginário - depois do nó raíz da árvore
 					son.setMin(!tree.isMin()); //Atribuo o contrário do MIN (sempre invertido)
 					son.setSons(new ArrayList<MinMaxNode>()); //Inicializo o vetor de filhos
-					
+
 					tree.getSons().add(son); //Adiciono o novo filho construído para a árvore
 				}
-				
+
 				return tree;
 			}
 			//faço sem alpha beta
@@ -588,43 +568,43 @@ public class Game {
 							newBoard.cell[j][j2].content = tree.getBoard().cell[j][j2].content;
 						}
 					}
-					
+
 					//Faço as inserções neste novo tabuleiro baseado no bestPlays
 					newBoard.setCell(newBoard.protectedInsertItem(tree.getBestPlays().get(i).initial.get(0).x, 
-																  tree.getBestPlays().get(i).initial.get(0).y, 
-																  Game.player1.getPiece(), 
-																  Game.player1.getName(), 
-																  tree.getBestPlays(), 
-																  newBoard.getCell())); 
-					
+							tree.getBestPlays().get(i).initial.get(0).y, 
+							Game.player1.getPiece(), 
+							Game.player1.getName(), 
+							tree.getBestPlays(), 
+							newBoard.getCell())); 
+
 					//Acho as novas possíveis transições sobre esse novo tabuleiro - considerando a visão do P1
 					ArrayList<Transition> newBoardTransitions = newBoard.findPlayableCells(newBoard.getCell(), 
 							Game.player1.getPiece(), 
 							Game.player2.getPiece());
-					
+
 					// Não crio um novo vetor de bestPlays baseado nas novas transições possíveis - porque deve analisar todas as jogadas inimigas
 					//ArrayList<Transition> newBestPlays = Game.alphaBeta(newBoardTransitions); 
-					
+
 					MinMaxNode son = new MinMaxNode();
 					son.setBoard(newBoard); //Atribuo o board imaginário alterado no nó raíz da árvore
 					son.setBestPlays(newBoardTransitions); //Atribuo a leitura do novo quadro imaginário - depois do nó raíz da árvore
 					son.setMin(!tree.isMin()); //Atribuo o contrário do MIN (sempre invertido)
 					son.setSons(new ArrayList<MinMaxNode>()); //Inicializo o vetor de filhos
-					
+
 					tree.getSons().add(son); //Adiciono o novo filho construído para a árvore
 				}
-				
+
 				return tree;
 			}
 			else {
 				System.out.println("Erro ao identificar se é MAX ou MIN do terceiro nível em diante da árvore de MINMAX");
 			}
 		}
-		
-		
+
+
 		return tree;
 	}
-	
+
 	/************** Imprimo o conteúdo da árvore **************/	
 	public static void printTree(MinMaxNode tree) {
 		System.out.println();
@@ -633,7 +613,7 @@ public class Game {
 		System.out.println();
 		System.out.println();
 		tree.printNodeContent();
-		
+
 		System.out.println();
 		System.out.println();
 		System.out.println("VOU IMPRIMIR OS FILHOS");
@@ -644,15 +624,15 @@ public class Game {
 			if (tree.getSons().get(i).getSons().size() > 0) {
 				Game.printTree(tree.getSons().get(i));
 			}
-			
+
 		}
 	}
-	
+
 	/*** Realiza a poda alpha beta ***/
 	public static ArrayList<Transition> alphaBeta(ArrayList<Transition> transitions) {
 		/*** Lista das variáveis filtradas no poda alphaBeta ***/
 		ArrayList<Transition> bestTransitions = new ArrayList<Transition>();
-		
+
 		/*** Procura a melhor jogada e utiliza ela para processamento de árvore no minMax ***/
 		int bestPlay = 0;
 		int bestPlayPosition = 0;
@@ -665,26 +645,26 @@ public class Game {
 		}
 		/*** Adiciono a melhor jogada encontrada na lista de melhores transições ***/
 		bestTransitions.add(transitions.get(bestPlayPosition));
-		
+
 		/*** Utilizo a melhor jogada encontrada em uma comparação com todas as outras para encontrar semelhantes ***/
 		for (int i = 0; i < transitions.size(); i++) {
 			/*** Caso ela seja equivalente a melhor ***/
 			if (transitions.get(i).getRealPoints() == bestTransitions.get(0).getRealPoints()) {
 				/*** Caso ela seja equivalente a melhor - e não esteja adicionada na lista ***/
 				if (bestTransitions.get(0).initial.get(0).x != transitions.get(i).initial.get(0).x && 
-					bestTransitions.get(0).initial.get(0).y != transitions.get(i).initial.get(0).y) {
+						bestTransitions.get(0).initial.get(0).y != transitions.get(i).initial.get(0).y) {
 					/*** E adicionada na lista ***/
 					bestTransitions.add(transitions.get(i));
 				}
 			}
 		}
-		
+
 		/*** Imprime o resultado obtido para testes ***/
 		Game.printAlphaBetaResult(bestTransitions);
-		
+
 		return bestTransitions;
 	}
-	
+
 	/*** Imprime o resultado de alpha beta ***/
 	public static void printAlphaBetaResult(ArrayList<Transition> transitions){
 		if (transitions.size() == 1){
@@ -706,7 +686,7 @@ public class Game {
 			System.out.println("Erro ao imprimir o resultado da lista obtida por poda alphabeta.");
 		}
 	}
-	
+
 	/***************************** GET'N SET *****************************/
 	public Board getBoard() {
 		return board;

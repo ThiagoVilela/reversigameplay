@@ -53,7 +53,7 @@ public class NewGame {
 		JLabel lblBemVindo = new JLabel("Escolhe seu modo de jogo");
 		lblBemVindo.setFont(new Font("Tahoma", Font.PLAIN, 35));
 		lblBemVindo.setIcon(null);
-		lblBemVindo.setBounds(135, 77, 567, 136);
+		lblBemVindo.setBounds(155, 77, 567, 136);
 		newGameFrame.getContentPane().add(lblBemVindo);
 
 		JLabel lblEscolhaSuaOp = new JLabel("O que você deseja fazer?");
@@ -71,7 +71,7 @@ public class NewGame {
 			}
 		});
 		humaHumaButton.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		humaHumaButton.setBounds(140, 306, 200, 66);
+		humaHumaButton.setBounds(150, 306, 200, 66);
 		newGameFrame.getContentPane().add(humaHumaButton);
 
 		JButton humaPCButton = new JButton("Humano X Computador");

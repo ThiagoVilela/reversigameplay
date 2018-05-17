@@ -53,7 +53,7 @@ public class Menu {
 		JLabel lblBemVindo = new JLabel("Bem vindo ao Reversi Game");
 		lblBemVindo.setFont(new Font("Tahoma", Font.PLAIN, 35));
 		lblBemVindo.setIcon(null);
-		lblBemVindo.setBounds(135, 77, 567, 136);
+		lblBemVindo.setBounds(155, 77, 567, 136);
 		menuFrame.getContentPane().add(lblBemVindo);
 
 		JLabel lblEscolhaSuaOp = new JLabel("O que você deseja fazer?");

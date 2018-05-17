@@ -62,12 +62,11 @@ public class HumanPC {
 		JRadioButton rbnFacil = new JRadioButton("Fácil");
 		JRadioButton rbnMedio = new JRadioButton("Médio");
 		JRadioButton rbnDificil = new JRadioButton("Difícil");
-		rbnMedio.setEnabled(false);
-		rbnDificil.setEnabled(false);
+
 		rbnFacil.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				/*rbnMedio.setEnabled(false);
-				rbnDificil.setEnabled(false);*/
+				rbnMedio.setSelected(false);
+				rbnDificil.setSelected(false);
 
 			}
 		});
@@ -76,8 +75,8 @@ public class HumanPC {
 		humanPCFrame.add(rbnFacil);
 		rbnMedio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				/*rbnFacil.setEnabled(false);
-				rbnDificil.setEnabled(false);*/
+				rbnFacil.setSelected(false);
+				rbnDificil.setSelected(false);
 
 			}
 		});
@@ -86,8 +85,8 @@ public class HumanPC {
 		humanPCFrame.add(rbnMedio);
 		rbnDificil.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				/*rbnFacil.setEnabled(false);
-				rbnMedio.setEnabled(false);*/
+				rbnFacil.setSelected(false);
+				rbnMedio.setSelected(false);
 			}
 		});
 		rbnDificil.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -142,7 +141,7 @@ public class HumanPC {
 		addBotao.setBounds(350, 379, 89, 23);
 		humanPCFrame.getContentPane().add(addBotao);
 		
-		JButton button = new JButton("Voltar para menu principal");
+		JButton button = new JButton("Voltar para menu novo jogo");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				NewGame window = new NewGame();

@@ -25,6 +25,12 @@ public class HumanIAScreen {
 	protected Object frame;
 	public static boolean iaWillPlay = false;
 
+	private JLabel erroBoardCheioLabel = new JLabel("Tabuleiro Cheio");
+	private JLabel erroJogadaInvalidaLabel = new JLabel("Valor Digitado não é uma possível jogada válida");
+	private JLabel erroValorDigitado = new JLabel("Valor Digitado não é uma possível jogada válida");
+	private JLabel score1Label;
+	private JLabel score2Label;
+
 	/**
 	 * Launch the application.
 	 */
@@ -83,13 +89,63 @@ public class HumanIAScreen {
 			}
 		}
 		else {
-			System.out.println("IA NAO VAI JOGAR AGORA NAO BENHE!");
+			System.out.println("IA NAO VAI JOGAR AGORA NAO!");
 		}
+
+		/* Adicionando simbolo jogador na tela */
+		if(Game.playerPlaying ==1) {
+			JLabel simbolo1Title = new JLabel(Game.player1.getName() + "");
+			simbolo1Title.setFont(new Font("Tahoma", Font.PLAIN, 14));
+			simbolo1Title.setBounds(10, 0, 300, 47);
+			humanIAScreenFrame.getContentPane().add(simbolo1Title);
+
+			JLabel jogadorSimboloLabel1 = new JLabel("Você está jogando com:  " + Game.player1.getPiece() + "");
+			jogadorSimboloLabel1.setFont(new Font("Tahoma", Font.PLAIN, 14));
+			jogadorSimboloLabel1.setBounds(10, 20, 300, 47);
+			humanIAScreenFrame.getContentPane().add(jogadorSimboloLabel1);
+		}
+		else {
+			JLabel simbolo2Title = new JLabel(Game.player2.getName() + "");
+			simbolo2Title.setFont(new Font("Tahoma", Font.PLAIN, 14));
+			simbolo2Title.setBounds(10, 0, 300, 47);
+			humanIAScreenFrame.getContentPane().add(simbolo2Title);
+
+			JLabel jogadorSimboloLabel2 = new JLabel("Você está jogando com:  " + Game.player2.getPiece() + "");
+			jogadorSimboloLabel2.setFont(new Font("Tahoma", Font.PLAIN, 14));
+			jogadorSimboloLabel2.setBounds(10, 20, 300, 47);
+			humanIAScreenFrame.getContentPane().add(jogadorSimboloLabel2);
+		}
+		/* FIM - Imprimir simbolo jogador na tela */
+
+		/* Adicionando placar */
+		int scoreArray[] = Game.board.getScore(Game.board.cell);
+		JLabel scoreTitle = new JLabel("Score " + Game.player1.getName() + "");
+		scoreTitle.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		scoreTitle.setBounds(300, 0, 100, 47);
+		humanIAScreenFrame.getContentPane().add(scoreTitle);
+
+		String scoreString1 = scoreArray[0] + "";
+		JLabel score1Label = new JLabel(scoreString1);
+		score1Label.setFont(new Font("Tahoma", Font.PLAIN, 19));
+		score1Label.setBounds(335, 25, 100, 47);
+		humanIAScreenFrame.getContentPane().add(score1Label);
+
+		JLabel scoreTitle2 = new JLabel("Score PC");
+		scoreTitle2.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		scoreTitle2.setBounds(400, 0, 100, 47);
+		humanIAScreenFrame.getContentPane().add(scoreTitle2);
+
+		String scoreString2 = scoreArray[1] + "";
+		JLabel score2Label = new JLabel(scoreString2);
+		score2Label.setFont(new Font("Tahoma", Font.PLAIN, 19));
+		score2Label.setBounds(435, 25, 100, 47);
+		humanIAScreenFrame.getContentPane().add(score2Label);
+		/* FIM - Adicionar placar */
 
 		/*** INICIO - Impressão do tabuleiro ***/
 		int paddingLeft = 220;
 		int paddingTop = 55;
-		
+
 		JLabel lblMatrizTop = new JLabel(Game.board.saveStringBoard(Game.board.getCell()));
 		lblMatrizTop.setFont(new Font("Tahoma", Font.PLAIN, 19));
 		lblMatrizTop.setBounds(paddingLeft, paddingTop, 550, 100);
@@ -145,10 +201,18 @@ public class HumanIAScreen {
 			System.err.println("ERRO AO IDENTIFICAR JOGADOR JOGANDO");
 		}
 
-		JLabel lblPossiblePlays = new JLabel(Game.board.savePlayableCells(transitions, Game.board.getCell()));
-		lblPossiblePlays.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		lblPossiblePlays.setBounds(100, 250, 550, 150);
-		humanIAScreenFrame.getContentPane().add(lblPossiblePlays);
+		if (transitions.size() <= 4) {
+			JLabel lblPossiblePlays = new JLabel(Game.board.savePlayableCells(transitions, Game.board.getCell()));
+			lblPossiblePlays.setFont(new Font("Tahoma", Font.PLAIN, 12));
+			lblPossiblePlays.setBounds(100, 250, 550, 150);
+			humanIAScreenFrame.getContentPane().add(lblPossiblePlays);
+		}
+		else if((transitions.size() > 4) && (transitions.size() < 7) ) {
+			JLabel lblPossiblePlays = new JLabel(Game.board.savePlayableCells(transitions, Game.board.getCell()));
+			lblPossiblePlays.setFont(new Font("Tahoma", Font.PLAIN, 9));
+			lblPossiblePlays.setBounds(100, 250, 550, 150);
+			humanIAScreenFrame.getContentPane().add(lblPossiblePlays);		
+		}
 		/*** FIM - Imprimir possíveis jogadas na tela ***/
 
 
@@ -193,7 +257,14 @@ public class HumanIAScreen {
 
 				else{
 					if (Game.board.isFull(Game.board.getCell())) {
-						//Colocar label de erro de inserção
+						erroBoardCheioLabel.setText("Tabuleiro Cheio - Jogo acabou");
+						erroBoardCheioLabel.setBounds(523, 208, 180, 14);
+						GameOver window = new GameOver();
+						window.gameOverFrame.setVisible(true);
+						humanIAScreenFrame.dispose();
+
+						jogadaLinhaField.setEnabled(false);
+						jogadaColunaField.setEnabled(false);
 					}
 					else {
 						sucessoNomesLabel.setBounds(523, 208, 0, 14);
@@ -218,13 +289,13 @@ public class HumanIAScreen {
 
 								Game.board.setCell(Game.board.protectedInsertItem(linhas, colunas, Game.player1.getPiece(), Game.player1.getName(), transitions, Game.board.getCell()));
 								Game.board.printBoard(Game.board.getCell());
-								
+
 								if (newBoard.isBoardDifferentAnotherBoard(newBoard.getCell(), Game.board.getCell())) {
 									System.out.println("MEU BOARD E DIFERENTE! E VOU JOGAR");
-											
+
 									Game.playerPlaying++;
 									HumanIAScreen.iaWillPlay = true;
-									
+
 									HumanIAScreen window = new HumanIAScreen();
 									window.humanIAScreenFrame.setVisible(true);
 									humanIAScreenFrame.dispose();
@@ -232,7 +303,7 @@ public class HumanIAScreen {
 
 								else {
 									System.out.println("NAO CONSEGUI INSERIR");
-									//Aqui tem de exibir um label de erro
+									erroJogadaInvalidaLabel.setText("Jogada Inválida, escolha sua jogada novamente");
 								}
 
 
@@ -249,7 +320,7 @@ public class HumanIAScreen {
 				}
 			}
 		});
-		playButton.setBounds(101, 454, 89, 23);
+		playButton.setBounds(100, 454, 89, 23);
 		humanIAScreenFrame.getContentPane().add(playButton);
 
 
@@ -263,7 +334,7 @@ public class HumanIAScreen {
 				humanIAScreenFrame.dispose();
 			}
 		});
-		button.setBounds(535, 454, 213, 23);
+		button.setBounds(550, 454, 120, 23);
 		humanIAScreenFrame.getContentPane().add(button);
-}
+	}
 }

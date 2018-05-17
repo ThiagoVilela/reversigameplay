@@ -55,16 +55,6 @@ public class HumanHuman {
 		humanHumanFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		humanHumanFrame.getContentPane().setLayout(null);
 
-		/*JLabel lblBemVindo = new JLabel("Bem vindo ao Reversi Game");
-		lblBemVindo.setFont(new Font("Tahoma", Font.PLAIN, 35));
-		lblBemVindo.setIcon(null);
-		lblBemVindo.setBounds(135, 77, 567, 136);
-		humanHumanFrame.getContentPane().add(lblBemVindo);
-		JLabel lblEscolhaSuaOp = new JLabel("O que você deseja fazer?");
-		lblEscolhaSuaOp.setFont(new Font("Tahoma", Font.PLAIN, 19));
-		lblEscolhaSuaOp.setBounds(263, 190, 272, 47);
-		humanHumanFrame.getContentPane().add(lblEscolhaSuaOp);*/
-
 		JLabel lblPreenchaOsCampos = new JLabel("Preencha os campos abaixo com os nomes dos jogadores:");
 		lblPreenchaOsCampos.setFont(new Font("Tahoma", Font.PLAIN, 19));
 		lblPreenchaOsCampos.setBounds(101, 95, 557, 30);
@@ -118,10 +108,10 @@ public class HumanHuman {
 				}
 			}
 		});
-		addBotao.setBounds(101, 379, 89, 23);
+		addBotao.setBounds(350, 309, 89, 23);
 		humanHumanFrame.getContentPane().add(addBotao);
 		
-		JButton button = new JButton("Voltar para menu principal");
+		JButton button = new JButton("Voltar para menu novo jogo");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				NewGame window = new NewGame();
