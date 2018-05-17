@@ -263,7 +263,8 @@ public class HumanGameScreen {
 								}
 
 								else {
-									//Aqui tem de exibir um label de erro
+									sucessoNomesLabel.setText("Coordenadas inválidas - Digite novamente");
+									sucessoNomesLabel.setBounds(550, 208, 180, 80);
 								}
 
 
@@ -283,12 +284,17 @@ public class HumanGameScreen {
 								}
 
 								else {
-									//Aqui tem de exibir um label de erro
+									sucessoNomesLabel.setText("Coordenadas inválidas - Digite novamente");
+									sucessoNomesLabel.setBounds(550, 208, 180, 80);
 								}
 
 							} else {
 								System.err.println("ERRO AO IDENTIFICAR JOGADOR JOGANDO");
 							}
+						}
+						else {
+							sucessoNomesLabel.setText("Coordenadas inválidas - Digite novamente");
+							sucessoNomesLabel.setBounds(550, 208, 180, 80);
 						}
 					}
 				}

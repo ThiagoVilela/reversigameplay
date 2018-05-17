@@ -65,6 +65,7 @@ public class HumanPC {
 
 		rbnFacil.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				Game.LEVEL = 1;
 				rbnMedio.setSelected(false);
 				rbnDificil.setSelected(false);
 
@@ -73,8 +74,10 @@ public class HumanPC {
 		rbnFacil.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		rbnFacil.setBounds(100, 286, 200, 66);
 		humanPCFrame.add(rbnFacil);
+		
 		rbnMedio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				Game.LEVEL = 3;
 				rbnFacil.setSelected(false);
 				rbnDificil.setSelected(false);
 
@@ -83,8 +86,10 @@ public class HumanPC {
 		rbnMedio.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		rbnMedio.setBounds(330, 286, 200, 66);
 		humanPCFrame.add(rbnMedio);
+		
 		rbnDificil.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				Game.LEVEL = 6;
 				rbnFacil.setSelected(false);
 				rbnMedio.setSelected(false);
 			}

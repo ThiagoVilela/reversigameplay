@@ -388,6 +388,46 @@ public class Game {
 
 					else if (tree.getSons().get(i).getSons().size() > 0) {
 						// Implementar para dificuldades maiores que 1
+						if (tree.getBestSon() == null) {
+							System.out.println("VOU TENTAR ADD UM FILHO NA MAX");
+							tree.setBestSon(Game.findBestMove(tree.getSons().get(i))); //ACHAR O PESO DO MELHOR FILHO
+							System.out.println("Voltei pra NUTELLA MAX");
+							if(tree.getBestSon() == null ) {System.out.println("Tentei adicionar o melhor filho da raiz nutella");}
+							else {System.out.println("ADICIONEI UM FILHO NUTELLA MAX 2FLAY!");}
+						}
+
+						else if (tree.getBestSon() != null) {
+							System.out.println("VOU COMPARAR O POSSIVEL NOVO BESTSON MAX COM O ATUAL");
+							/*** Obtenho a pontuação da jogada feita no bestSon ***/
+							int[] score = tree.getBestSon().getBoard().getScore(tree.getBestSon().getBoard().getCell());
+							int aiBestSonScore = 0;
+
+							if (Game.player2.getPiece() == 'O') {aiBestSonScore = score[0];}
+							else if(Game.player2.getPiece() == 'X') {aiBestSonScore = score[1];}
+							else {System.out.println("Erro ao identificar a quem pertence o score");}
+
+							/*** Obtenho a pontuação da jogada feita no possível candidato a bestSon ***/
+							int aiActualSonScore = -1;
+							MinMaxNode possibleBestSon = Game.findBestMove(tree.getSons().get(i));
+
+							if (possibleBestSon != null) {
+								score = possibleBestSon.getBoard().getScore(tree.getSons().get(i).getBoard().getCell());
+								if (Game.player2.getPiece() == 'O') {aiActualSonScore = score[0];}
+								else if(Game.player2.getPiece() == 'X') {aiActualSonScore = score[1];}
+								else {System.out.println("Erro ao identificar a quem pertence o score");}
+							}
+
+							/*** Substituo o novo bestSon pelo nó de maior pontuação  ***/
+							if (aiActualSonScore > aiBestSonScore) {
+								System.out.println("COMPAREI E TROQUEI O BEST SON DO MAX!");
+								tree.setBestSon(tree.getSons().get(i));
+							}else {
+								System.out.println("COMPAREI E NAAAOOOOO TROQUEI O BEST SON DO MAX!");
+							}
+							System.out.println();
+							System.out.println();
+							System.out.println();
+						}
 					}
 				}
 				return tree.getBestSon();

@@ -251,8 +251,8 @@ public class HumanIAScreen {
 		playButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(jogadaLinhaField.getText().equals("") || jogadaColunaField.getText().equals("") ){
-					sucessoNomesLabel.setText("Preencha todos os campos para jogar.");
-					sucessoNomesLabel.setBounds(523, 208, 180, 14);
+					sucessoNomesLabel.setText("Preencha todos os campos");
+					sucessoNomesLabel.setBounds(550, 208, 180, 100);
 				} 
 
 				else{
@@ -302,8 +302,10 @@ public class HumanIAScreen {
 								}
 
 								else {
-									System.out.println("NAO CONSEGUI INSERIR");
-									erroJogadaInvalidaLabel.setText("Jogada Inválida, escolha sua jogada novamente");
+									System.out.println("NAO CONSEGUI INSERIR - BOARD IGUAL");
+									
+									sucessoNomesLabel.setText("Coordenadas inválidas - Digite novamente");
+									sucessoNomesLabel.setBounds(550, 208, 180, 80);
 								}
 
 
@@ -314,6 +316,9 @@ public class HumanIAScreen {
 							}
 
 						} else {
+							sucessoNomesLabel.setText("Coordenadas inválidas - Digite novamente");
+							sucessoNomesLabel.setBounds(550, 208, 180, 80);
+							
 							System.err.println("ERRO AO IDENTIFICAR JOGADOR JOGANDO");
 						}
 					}
