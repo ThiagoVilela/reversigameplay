@@ -184,18 +184,45 @@ public class HumanGameScreen {
 						/*** Executo a jogada informada pelo jogador ***/
 						if (Game.playerPlaying == 1) {
 							ArrayList<Transition> transitions = Game.board.findPlayableCells(Game.board.getCell(), Game.player2.getPiece(), Game.player1.getPiece());
+							
+							Board newBoard = new Board();
+							newBoard.setCell(Game.board.getCell());
+							
 							Game.board.setCell(Game.board.protectedInsertItem(linhas, colunas, Game.player1.getPiece(), Game.player1.getName(), transitions, Game.board.getCell()));
-							Game.playerPlaying++;
+							
+							
+							if (!newBoard.isBoardEqualAnotherBoard(newBoard.getCell(), Game.board.getCell())) {
+								Game.playerPlaying++;
+								
+								HumanGameScreen window = new HumanGameScreen();
+								window.humanGameScreenFrame.setVisible(true);
+								humanGameScreenFrame.dispose();
+							}
+							
+							else {
+								//Aqui tem de exibir um label de erro
+							}
 							
 							
 						} else if (Game.playerPlaying == 2) {
 							ArrayList<Transition> transitions = Game.board.findPlayableCells(Game.board.getCell(), Game.player1.getPiece(), Game.player2.getPiece());
 							
-							//Board newBoard = newBoard.setCell(cell);
+							Board newBoard = new Board();
+							newBoard.setCell(Game.board.getCell());
 							Game.board.setCell(Game.board.protectedInsertItem(linhas, colunas, Game.player2.getPiece(), Game.player2.getName(), transitions, Game.board.getCell()));
-							Game.playerPlaying--;
 							
+							if (!newBoard.isBoardEqualAnotherBoard(newBoard.getCell(), Game.board.getCell())) {
+								Game.playerPlaying--;
+								
+								HumanGameScreen window = new HumanGameScreen();
+								window.humanGameScreenFrame.setVisible(true);
+								humanGameScreenFrame.dispose();
+							}
 							
+							else {
+								//Aqui tem de exibir um label de erro
+							}
+	
 						} else {
 							System.err.println("ERRO AO IDENTIFICAR JOGADOR JOGANDO");
 						}
