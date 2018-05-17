@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
+import com.reversi.Board;
 import com.reversi.Game;
 import com.reversi.Transition;
 
@@ -112,13 +113,11 @@ public class HumanGameScreen {
 		/*** Imprimir possíveis jogadas na tela ***/
 		ArrayList<Transition> transitions = new ArrayList<Transition>();
 		if (Game.playerPlaying == 1) {
-			System.out.println("ENTREI NO PLAYER 1 JOGANDO!");
 			transitions = Game.board.findPlayableCells(Game.board.getCell(), Game.player2.getPiece(), Game.player1.getPiece());
-			System.out.println("FEZ TRANSIÇÂO");
-			Game.playerPlaying++;
+			
 		} else if (Game.playerPlaying == 2) {
 			transitions = Game.board.findPlayableCells(Game.board.getCell(), Game.player1.getPiece(), Game.player2.getPiece());
-			Game.playerPlaying--;
+			
 		} else {
 			System.err.println("ERRO AO IDENTIFICAR JOGADOR JOGANDO");
 		}
@@ -164,7 +163,6 @@ public class HumanGameScreen {
 		humanGameScreenFrame.getContentPane().add(sucessoNomesLabel);
 		playButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
 				if(jogadaLinhaField.getText().equals("") || jogadaColunaField.getText().equals("") ){
 					sucessoNomesLabel.setText("Preencha todos os campos para jogar.");
 					sucessoNomesLabel.setBounds(523, 208, 180, 14);
@@ -172,6 +170,39 @@ public class HumanGameScreen {
 
 				else{
 					sucessoNomesLabel.setBounds(523, 208, 0, 14);
+					int linhas = -1;
+					int colunas = -1;
+					/*** Converto os dados ***/
+					try {
+						linhas = Integer.parseInt(jogadaLinhaField.getText());
+						colunas = Integer.parseInt(jogadaColunaField.getText());
+					}catch (NumberFormatException e1) {
+						System.err.println("Erro ao converter o campo linha/coluna para inteiro");
+					}
+					
+					if (linhas >= 0 && colunas >= 0) {
+						/*** Executo a jogada informada pelo jogador ***/
+						if (Game.playerPlaying == 1) {
+							ArrayList<Transition> transitions = Game.board.findPlayableCells(Game.board.getCell(), Game.player2.getPiece(), Game.player1.getPiece());
+							Game.board.setCell(Game.board.protectedInsertItem(linhas, colunas, Game.player1.getPiece(), Game.player1.getName(), transitions, Game.board.getCell()));
+							Game.playerPlaying++;
+							
+							
+						} else if (Game.playerPlaying == 2) {
+							ArrayList<Transition> transitions = Game.board.findPlayableCells(Game.board.getCell(), Game.player1.getPiece(), Game.player2.getPiece());
+							
+							//Board newBoard = newBoard.setCell(cell);
+							Game.board.setCell(Game.board.protectedInsertItem(linhas, colunas, Game.player2.getPiece(), Game.player2.getName(), transitions, Game.board.getCell()));
+							Game.playerPlaying--;
+							
+							
+						} else {
+							System.err.println("ERRO AO IDENTIFICAR JOGADOR JOGANDO");
+						}
+					}
+					
+					
+					
 				}
 			}
 		});

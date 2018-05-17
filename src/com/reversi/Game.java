@@ -43,7 +43,7 @@ public class Game {
 			boolean shouldIStop = false;
 			int playerPlaying = 1;
 			while(!shouldIStop) {
-				if (!this.board.isFull(this.board.getCell())) {
+				if (!Game.board.isFull(Game.board.getCell())) {
 					if (playerPlaying == 1) {
 						this.playerPlays(player1.getPiece(), player2.getPiece(), player1.getName());
 						playerPlaying++;
@@ -57,7 +57,7 @@ public class Game {
 						System.out.println("Erro na escolha do jogador");
 					}
 				}
-				else if(this.board.isFull(this.board.getCell())){
+				else if(Game.board.isFull(Game.board.getCell())){
 					shouldIStop = true;
 					System.out.println("Acabou o jogo!");
 					System.out.println("Tabuleiro cheio!");
@@ -71,11 +71,11 @@ public class Game {
 		/*** Opção Human x IA ***/
 		else if(configuration == 1) {
 			/*** Reseto o tabuleiro ***/
-			this.board.resetBoard();
+			Game.board.resetBoard();
 			
 			/*** Seto as características dos jogadores ***/
-			this.player1 = new Player(Game.namePlayer1, 'O');
-			this.player2 = new Player("Adalberto", 'X');
+			Game.player1 = new Player(Game.namePlayer1, 'O');
+			Game.player2 = new Player("Adalberto", 'X');
 
 			/*** Faço um texto de introdução explicativo ***/
 			System.out.println("Bem vindx ao modo de jogo humano contra a mais amazing machine that exists :D");
@@ -89,7 +89,7 @@ public class Game {
 			boolean shouldIStop = false;
 			int playerPlaying = 1;
 			while(!shouldIStop) {
-				if (!this.board.isFull(this.board.getCell())) {
+				if (!Game.board.isFull(Game.board.getCell())) {
 					if (playerPlaying == 1) {
 						this.playerPlays(player1.getPiece(), player2.getPiece(), player1.getName());
 						playerPlaying++;
@@ -103,7 +103,7 @@ public class Game {
 						System.out.println("Erro na escolha do jogador");
 					}
 				}
-				else if(this.board.isFull(this.board.getCell())){
+				else if(Game.board.isFull(Game.board.getCell())){
 					shouldIStop = true;
 					System.out.println("Acabou o jogo!");
 					System.out.println("Tabuleiro cheio!");

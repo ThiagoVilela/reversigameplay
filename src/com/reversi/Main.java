@@ -27,7 +27,7 @@ public class Main {
 		
 		/*** Parametro 0 - Humano x Humano ***/
 		/*** Parametro 1 - Humano x IA ***/
-		//game.startGame(1);
+		//game.startGame(0);
 	}
 	
 	/***************************** GET'N SET *****************************/

@@ -365,6 +365,10 @@ public class Board {
 	public Cell[][] protectedInsertItem(int x, int y, char newContent, String player, ArrayList<Transition> transitions, Cell[][] board) {
 		for (int i = 0; i < transitions.size(); i++) {
 			for (int j = 0; j < transitions.get(i).initial.size(); j++) {
+				System.out.println("MEU X VALE " + x);
+				System.out.println("MEU Y VALE " + y);
+				System.out.println(transitions.get(i).initial.get(j).x);
+				System.out.println(transitions.get(i).initial.get(j).y);
 				if (x == transitions.get(i).initial.get(j).x && y == transitions.get(i).initial.get(j).y) {
 					board = this.changeItemsOnPlay(x, y, newContent, transitions.get(i), board);
 					board = this.insertItem(x, y, newContent, player, board);
@@ -564,6 +568,18 @@ public class Board {
 		boardContent.append("\n");
 		
 		return boardContent.toString();
+	}
+	
+	/*** Verifico se um Tabuleiro é diferente do outro ***/
+	public boolean isBoardEqualAnotherBoard(Cell[][] board, Cell[][] board2) {
+		for (int i = 0; i < board.length; i++) {
+			for (int j = 0; j < board[i].length; j++) {
+				if (board[i][j].content != board2[i][j].content) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	/*** "Limpa" a tela ***/
