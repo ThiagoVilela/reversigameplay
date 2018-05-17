@@ -8,6 +8,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
 import com.reversi.Game;
+import com.reversi.Player;
 
 import java.awt.Font;
 import javax.swing.JButton;
@@ -125,6 +126,10 @@ public class HumanPC {
 					sucessoNomesLabel.setBounds(523, 208, 0, 14);
 					Game.namePlayer1 = nomePlayer1Field.getText();
 					Game.board.resetBoard();
+					
+					/*** Seto as características dos jogadores ***/
+					Game.player1 = new Player(Game.namePlayer1, 'O', 2);
+					Game.player2 = new Player("Adalberto", 'X', 2);
 				}
 			}
 		});

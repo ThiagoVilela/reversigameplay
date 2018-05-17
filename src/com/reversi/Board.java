@@ -322,6 +322,22 @@ public class Board {
 		}
 	}
 	
+	/*** Salva uma lista em String de possíveis jogadas ***/
+	public String savePlayableCells(ArrayList<Transition> playableCells, Cell[][] board) {
+		//this.printBoard(board);
+		StringBuffer savedCells = new StringBuffer();
+		if (playableCells.size() > 0) {
+			savedCells.append("Possíveis jogadas:   ");
+			for (int i = 0; i < playableCells.size(); i++) {
+				savedCells.append("Jogada "+(i+1)+": ("+playableCells.get(i).initial.get(0).x+","+playableCells.get(i).initial.get(0).y+")   ");
+			}
+		} else {
+			System.err.println("Não existem jogadas possíveis.");
+		}
+		
+		return savedCells.toString();
+	}
+	
 	/*** Imprime uma lista detalhada das possíveis jogadas ***/
 	public void printPlayableDetails(ArrayList<Transition> playableCells, Cell[][] board) {
 		this.printBoard(board);

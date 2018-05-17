@@ -6,13 +6,15 @@ import java.util.Scanner;
 public class Game {
 	/***************************** ATRIBUTOS *****************************/
 	public static Board board = new Board();
-	private static Player player1;
-	private static Player player2;
+	public static Player player1;
+	public static Player player2;
 	
 	/*** Variáveis estáticas para linkar com a interface ***/
 	public static int LEVEL = 1;
 	public static String namePlayer1 = "";
 	public static String namePlayer2 = "";
+	
+	public static int playerPlaying = 1;
 
 	/****************************** MÉTODOS ******************************/
 	/*** Starto o jogo ***/

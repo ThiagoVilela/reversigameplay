@@ -7,10 +7,12 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 import com.reversi.Game;
+import com.reversi.Transition;
 
 import java.awt.Font;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
 public class HumanGameScreen {
@@ -103,6 +105,29 @@ public class HumanGameScreen {
 		lblMatriz7.setBounds(paddingLeft, paddingTop+160, 550, 100);
 		humanGameScreenFrame.getContentPane().add(lblMatriz7);
 		/*** FIM - Impressão do tabuleiro ***/
+		
+		
+		
+		
+		/*** Imprimir possíveis jogadas na tela ***/
+		ArrayList<Transition> transitions = new ArrayList<Transition>();
+		if (Game.playerPlaying == 1) {
+			System.out.println("ENTREI NO PLAYER 1 JOGANDO!");
+			transitions = Game.board.findPlayableCells(Game.board.getCell(), Game.player2.getPiece(), Game.player1.getPiece());
+			System.out.println("FEZ TRANSIÇÂO");
+			Game.playerPlaying++;
+		} else if (Game.playerPlaying == 2) {
+			transitions = Game.board.findPlayableCells(Game.board.getCell(), Game.player1.getPiece(), Game.player2.getPiece());
+			Game.playerPlaying--;
+		} else {
+			System.err.println("ERRO AO IDENTIFICAR JOGADOR JOGANDO");
+		}
+
+		JLabel lblPossiblePlays = new JLabel(Game.board.savePlayableCells(transitions, Game.board.getCell()));
+		lblPossiblePlays.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lblPossiblePlays.setBounds(100, 250, 550, 150);
+		humanGameScreenFrame.getContentPane().add(lblPossiblePlays);
+		/*** FIM - Imprimir possíveis jogadas na tela ***/
 		
 		
 		

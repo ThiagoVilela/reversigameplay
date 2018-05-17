@@ -7,6 +7,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 import com.reversi.Game;
+import com.reversi.Player;
 
 import java.awt.Font;
 import javax.swing.JButton;
@@ -104,8 +105,12 @@ public class HumanHuman {
 
 					Game.namePlayer1 = nomePlayer1Field.getText();
 					Game.namePlayer2 = nomePlayer2Field.getText();
-					
 					Game.board.resetBoard();
+					Game.playerPlaying = 1;
+					
+					/*** Seto as características dos jogadores ***/
+					Game.player1 = new Player(Game.namePlayer1, 'O', 2);
+					Game.player2 = new Player(Game.namePlayer2, 'X', 2);
 					
 					HumanGameScreen window = new HumanGameScreen();
 					window.humanGameScreenFrame.setVisible(true);
