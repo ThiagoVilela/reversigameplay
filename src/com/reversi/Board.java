@@ -22,7 +22,7 @@ public class Board {
 	/*** Verifica se a posição no tabuleiro possui algum elemento inimigo ao seu redor ***/
 	public ArrayList<Coordinate> hasBadNeighborhood(int x, int y, char enemyCell, Cell[][] cell) {
 		ArrayList<Coordinate> badNeighbors = new ArrayList<Coordinate>();
-		System.out.println("LOOKING FOR ENEMIES AROUND ["+x+"]["+y+"] - LOOKING FOR '" + enemyCell+"'");
+		//System.out.println("LOOKING FOR ENEMIES AROUND ["+x+"]["+y+"] - LOOKING FOR '" + enemyCell+"'");
 		for (int i = x-1; i <= x+1; i++) {
 			for (int j = y-1; j <= y+1; j++) {
 				/* Respeito os limites de bordas do tabuleiro */
@@ -30,15 +30,16 @@ public class Board {
 					/* Verifico se é uma célula inimiga */
 					if (cell[i][j].content == enemyCell) {
 						/* Armazeno a célula inimiga em uma lista dinamica de coordenadas inteiras */
-						System.out.print("FOUND AN ENEMY CELL (" + enemyCell +") AT [" +i+"]["+j+"]" );
+						//System.out.print("FOUND AN ENEMY CELL (" + enemyCell +") AT [" +i+"]["+j+"]" );
 						badNeighbors.add(new Coordinate(i,j));
-						System.out.println(" - WATCHING TARGET, OVER.");
+						//System.out.println(" - WATCHING TARGET, OVER.");
 					}
 				}
 			}
 		}
 		return badNeighbors;
 	}
+	
 	/*** Verifica o peso da casa em questão ***/
 	public int checkCellWeight(int x, int y) {
 		if ((x == 0 && y == 0) || (x == 0 && y == SIZE-1) || (x == SIZE-1 && y == 0) || (x == SIZE-1 && y == SIZE-1)) {
@@ -55,16 +56,17 @@ public class Board {
 			return -1;
 		}
 	}
+	
 	/*** Verifica toda a direção de uma coordenada (em relação a outra) até encontrar uma peça aliada ***/
 	public Transition findAllies(int x, int y, char alliedCell, ArrayList<Coordinate> badNeighbors, Cell[][] matrix) {
 		/* Cria um elemento transição para receber os dados */
 		Transition newTransition = new Transition();
 		
-		System.out.println("ENTREI NA FIND ALLIES COM (" + x + "," + y + ")");
+		//System.out.println("ENTREI NA FIND ALLIES COM (" + x + "," + y + ")");
 		for (int i = 0; i < badNeighbors.size(); i++) {
 			/* Diagonal superior esquerda */
 			if (badNeighbors.get(i).x == x-1 && badNeighbors.get(i).y == y-1) {
-				System.out.println("Encontrei ["+badNeighbors.get(i).x + "]["+badNeighbors.get(i).y+"] na Diagonal superior esquerda");
+				//System.out.println("Encontrei ["+badNeighbors.get(i).x + "]["+badNeighbors.get(i).y+"] na Diagonal superior esquerda");
 				/* Busca direcionada na diagonal superior esquerda */
 				boolean isVirgin = true;
 				int numberOfIterations = 0;
@@ -74,7 +76,7 @@ public class Board {
 						j = SIZE;
 					}
 					else if (matrix[x-j][y-j].content == alliedCell) {
-						System.out.println("Encontrei um aliado na diagonal superior esquerda ["+(x-j)+"]["+(y-j)+"]");
+						//System.out.println("Encontrei um aliado na diagonal superior esquerda ["+(x-j)+"]["+(y-j)+"]");
 						/* Criação do elemento transição para lógica de jogo */
 						newTransition.initial.add(new Coordinate(x,y)); //Elemento inicial
 						newTransition.end.add(new Coordinate(x-j,y-j)); //Elemento final
@@ -90,7 +92,7 @@ public class Board {
 			}
 			/* Esquerda */
 			else if(badNeighbors.get(i).x == x-0 && badNeighbors.get(i).y == y-1) {
-				System.out.println("Encontrei ["+badNeighbors.get(i).x + "]["+badNeighbors.get(i).y+"] esquerda");
+				//System.out.println("Encontrei ["+badNeighbors.get(i).x + "]["+badNeighbors.get(i).y+"] esquerda");
 				/* Busca direcionada na esquerda */
 				boolean isVirgin = true;
 				int numberOfIterations = 0;
@@ -100,7 +102,7 @@ public class Board {
 						j = -1;
 					}
 					else if (matrix[x][j].content == alliedCell) {
-						System.out.println("Encontrei um aliado na esquerda ["+badNeighbors.get(i).x+"]["+j+"]");
+						//System.out.println("Encontrei um aliado na esquerda ["+badNeighbors.get(i).x+"]["+j+"]");
 						/* Criação do elemento transição para lógica de jogo */
 						newTransition.initial.add(new Coordinate(x,y)); //Elemento inicial
 						newTransition.end.add(new Coordinate(x,j)); //Elemento final
@@ -112,12 +114,12 @@ public class Board {
 						j = -1;
 					}
 					isVirgin = false;
-					System.out.println("FIZ " + numberOfIterations + " ITERAÇOES.");
+					//System.out.println("FIZ " + numberOfIterations + " ITERAÇOES.");
 				}
 			}
 			/* Diagonal inferior esquerda */
 			else if(badNeighbors.get(i).x == x+1 && badNeighbors.get(i).y == y-1) {
-				System.out.println("Encontrei [" + badNeighbors.get(i).x + "][" +badNeighbors.get(i).y+ "]  inferior esquerda");
+				//System.out.println("Encontrei [" + badNeighbors.get(i).x + "][" +badNeighbors.get(i).y+ "]  inferior esquerda");
 				/* Busca direcionada na diagonal inferior esquerda */
 				boolean isVirgin = true;
 				int numberOfIterations = 0;
@@ -127,7 +129,7 @@ public class Board {
 						j = y+1;
 					}
 					else if (matrix[x+j][y-j].content == alliedCell) {
-						System.out.println("Encontrei um aliado na diagonal inferior esquerda ["+(x+j)+"]["+(y-j)+"]");
+						//System.out.println("Encontrei um aliado na diagonal inferior esquerda ["+(x+j)+"]["+(y-j)+"]");
 						/* Criação do elemento transição para lógica de jogo */
 						newTransition.initial.add(new Coordinate(x,y)); //Elemento inicial
 						newTransition.end.add(new Coordinate(x+j,y-j)); //Elemento final
@@ -143,7 +145,7 @@ public class Board {
 			}
 			/* Baixo */
 			else if(badNeighbors.get(i).x == x+1 && badNeighbors.get(i).y == y-0) {
-				System.out.println("Encontrei [" + badNeighbors.get(i).x + "][" +badNeighbors.get(i).y+ "] abaixo");
+				//System.out.println("Encontrei [" + badNeighbors.get(i).x + "][" +badNeighbors.get(i).y+ "] abaixo");
 				/* Busca direcionada pra baixo */
 				boolean isVirgin = true;
 				int numberOfIterations = 0;
@@ -153,7 +155,7 @@ public class Board {
 						j = SIZE;
 					}
 					else if (matrix[j][y].content == alliedCell) {
-						System.out.println("Encontrei um aliado embaixo ["+j+"]["+y+"]");
+						//System.out.println("Encontrei um aliado embaixo ["+j+"]["+y+"]");
 						/* Criação do elemento transição para lógica de jogo */
 						newTransition.initial.add(new Coordinate(x,y)); //Elemento inicial
 						newTransition.end.add(new Coordinate(j,y)); //Elemento final
@@ -169,7 +171,7 @@ public class Board {
 			}
 			/* Diagonal inferior direita */
 			else if(badNeighbors.get(i).x == x+1 && badNeighbors.get(i).y == y+1) {
-				System.out.println("Encontrei [" + badNeighbors.get(i).x + "][" +badNeighbors.get(i).y+ "] Diagonal inferior direita");
+				//System.out.println("Encontrei [" + badNeighbors.get(i).x + "][" +badNeighbors.get(i).y+ "] Diagonal inferior direita");
 				/* Busca direcionada na diagonal inferior direita */
 				boolean isVirgin = true;
 				int numberOfIterations = 0;
@@ -179,7 +181,7 @@ public class Board {
 						j = SIZE;
 					}
 					else if (matrix[x+j][y+j].content == alliedCell) {
-						System.out.println("Encontrei um aliado na diagonal inferior direita ["+(x+j)+"]["+(y+j)+"]");
+						//System.out.println("Encontrei um aliado na diagonal inferior direita ["+(x+j)+"]["+(y+j)+"]");
 						/* Criação do elemento transição para lógica de jogo */
 						newTransition.initial.add(new Coordinate(x,y)); //Elemento inicial
 						newTransition.end.add(new Coordinate(x+j,y+j)); //Elemento final
@@ -195,7 +197,7 @@ public class Board {
 			}
 			/* Direita */
 			else if(badNeighbors.get(i).x == x-0 && badNeighbors.get(i).y == y+1) {
-				System.out.println("Encontrei ["+badNeighbors.get(i).x + "]["+badNeighbors.get(i).y+"] na direita");
+				//System.out.println("Encontrei ["+badNeighbors.get(i).x + "]["+badNeighbors.get(i).y+"] na direita");
 				/* Busca direcionada na direita */
 				boolean isVirgin = true;
 				int numberOfIterations = 0;
@@ -205,7 +207,7 @@ public class Board {
 						j = SIZE;
 					}
 					else if (matrix[x][j].content == alliedCell) {
-						System.out.println("Encontrei um aliado na direita ["+x+"]["+j+"]");
+						//System.out.println("Encontrei um aliado na direita ["+x+"]["+j+"]");
 						/* Criação do elemento transição para lógica de jogo */
 						newTransition.initial.add(new Coordinate(x,y)); //Elemento inicial
 						newTransition.end.add(new Coordinate(x,j)); //Elemento final
@@ -221,7 +223,7 @@ public class Board {
 			}
 			/* Diagonal superior direita */
 			else if(badNeighbors.get(i).x == x-1 && badNeighbors.get(i).y == y+1) {
-				System.out.println("Encontrei [" + badNeighbors.get(i).x + "][" +badNeighbors.get(i).y+ "] Diagonal superior direita");
+				//System.out.println("Encontrei [" + badNeighbors.get(i).x + "][" +badNeighbors.get(i).y+ "] Diagonal superior direita");
 				/* Busca direcionada na diagonal superior direita */
 				boolean isVirgin = true;
 				int numberOfIterations = 0;
@@ -231,7 +233,7 @@ public class Board {
 						j = x +1;
 					}
 					else if (matrix[x-j][y+j].content == alliedCell) {
-						System.out.println("Encontrei um aliado na diagonal superior direita ["+(x-j)+"]["+(y+j)+"]");
+						//System.out.println("Encontrei um aliado na diagonal superior direita ["+(x-j)+"]["+(y+j)+"]");
 						/* Criação do elemento transição para lógica de jogo */
 						newTransition.initial.add(new Coordinate(x,y)); //Elemento inicial
 						newTransition.end.add(new Coordinate(x-j,y+j)); //Elemento final
@@ -247,7 +249,7 @@ public class Board {
 			}
 			/* Em cima */
 			else if(badNeighbors.get(i).x == x-1 && badNeighbors.get(i).y == y-0) {
-				System.out.println("Encontrei ["+badNeighbors.get(i).x + "]["+badNeighbors.get(i).y+"] em cima");
+				//System.out.println("Encontrei ["+badNeighbors.get(i).x + "]["+badNeighbors.get(i).y+"] em cima");
 				/* Busca direcionada pra cima */
 				boolean isVirgin = true;
 				int numberOfIterations = 0;
@@ -257,7 +259,7 @@ public class Board {
 						j = -1;
 					}
 					else if (matrix[j][y].content == alliedCell) {
-						System.out.println("Encontrei um aliado logo acima ["+j+"]["+y+"]");
+						//System.out.println("Encontrei um aliado logo acima ["+j+"]["+y+"]");
 						/* Criação do elemento transição para lógica de jogo */
 						newTransition.initial.add(new Coordinate(x,y)); //Elemento inicial
 						newTransition.end.add(new Coordinate(j,y)); //Elemento final
@@ -289,20 +291,20 @@ public class Board {
 				if (this.isEmpty(i, j, board)) {
 					/* Caso a célula tenha inimigos ao seu redor */
 					if (this.hasBadNeighborhood(i, j, enemyCell, board).size() > 0) {
-						System.out.println("ENCONTREI INIMIGOS - VERIFICAR AMIGOS PERTO");
+						//System.out.println("ENCONTREI INIMIGOS - VERIFICAR AMIGOS PERTO");
 						/* E possua aliado(s) a frente desse(s) inimigo(s) */
 						Transition newTransition = new Transition();
 						newTransition = this.findAllies(i, j, alliedCell, this.hasBadNeighborhood(i, j, enemyCell, board), board);
 						if (newTransition.initial.size() > 0) {
-							System.out.println("VOU ADD ("+i+","+j+")");
+							//System.out.println("VOU ADD ("+i+","+j+")");
 							possibleTransitions.add(newTransition);
-							System.out.println();
+							//System.out.println();
 						}
 					}
 				}
 			}
 		}
-		System.out.println("VOU RETORNAR O PLAYABLE");
+		//System.out.println("VOU RETORNAR O PLAYABLE");
 		/* Retorna uma lista com todas as posições jogáveis no momento */
 		return possibleTransitions;
 	}
@@ -558,6 +560,7 @@ public class Board {
 		//board.printBoard(board.getCell());
 		//board.insertItem(0, 0, 'X', "Humano");
 		board.resetBoard();
+		//board.setCell(board.insertItem(2, 4, 'O', "Humano", board.getCell()));
 		board.printBoard(board.getCell());
 		//board.hasBadNeighborhood(3, 3, 'X');
 		
@@ -605,7 +608,7 @@ public class Board {
 		board.insertItem(7, 7, 'O', "Humano");*/
 		
 		/*** Novos casos de teste ***/
-		board.setCell(board.insertItem(1, 3, 'O', "Humano", board.getCell()));
+		/*board.setCell(board.insertItem(1, 3, 'O', "Humano", board.getCell()));
 		board.setCell(board.insertItem(1, 4, 'O', "Humano", board.getCell()));
 		board.setCell(board.insertItem(2, 3, 'O', "Humano", board.getCell()));
 		board.setCell(board.insertItem(2, 2, 'X', "Humano", board.getCell()));
@@ -620,7 +623,7 @@ public class Board {
 		board.setCell(board.insertItem(5, 5, 'X', "Humano", board.getCell()));
 		board.setCell(board.insertItem(5, 6, 'X', "Humano", board.getCell()));
 		board.setCell(board.insertItem(6, 5, 'X', "Humano", board.getCell()));
-		board.setCell(board.insertItem(7, 6, 'O', "Humano", board.getCell()));
+		board.setCell(board.insertItem(7, 6, 'O', "Humano", board.getCell()));*/
 		
 		board.printBoard(board.getCell());
 		//board.findAllies(2, 5, 'O', board.hasBadNeighborhood(2, 5, 'X', board.getCell()), board.getCell());
@@ -636,9 +639,19 @@ public class Board {
 		board.setCell(board.protectedInsertItem(6, 6, 'O', "Humano", transitions, board.getCell()));*/
 		
 		game.getBoard().resetBoard();
+		//board.setCell(board.protectedInsertItem(2, 4, 'O', "Humano",transitions, board.getCell()));
 		game.getBoard().setCell(board.getCell());
+		game.getBoard().printBoard(game.getBoard().getCell());
 		game.setPlayer1(new Player("Thiago", 'O'));
 		game.setPlayer2(new Player("Adalberto", 'X'));
+		//game.aiPlays('X', 'O', "ADALBERTO");
+		game.getBoard().setCell(board.protectedInsertItem(2, 4, 'O', "Humano",transitions, board.getCell()));
+		game.getBoard().printBoard(game.getBoard().getCell());
+		game.aiPlays('X', 'O', "ADALBERTO");
+		
+		transitions = game.getBoard().findPlayableCells(game.getBoard().getCell(), 'X', 'O');
+		game.getBoard().setCell(board.protectedInsertItem(2, 2, 'O', "Humano",transitions, board.getCell()));
+		game.getBoard().printBoard(game.getBoard().getCell());
 		game.aiPlays('X', 'O', "ADALBERTO");
 		
 		//board.setCell(board.protectedInsertItem(7, 7, 'O', "Humano", transitions, board.getCell()));

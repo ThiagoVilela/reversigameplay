@@ -8,7 +8,11 @@ public class Game {
 	private Board board = new Board();
 	private Player player1;
 	private Player player2;
+	
+	/*** Variáveis estáticas para linkar com a interface ***/
 	public static int LEVEL = 1;
+	public static String namePlayer1 = "";
+	public static String namePlayer2 = "";
 
 	/****************************** MÉTODOS ******************************/
 	/*** Starto o jogo ***/
@@ -20,8 +24,8 @@ public class Game {
 			this.board.resetBoard();
 			
 			/*** Seto as características dos jogadores ***/
-			this.player1 = new Player("Thiago", 'O', 2);
-			this.player2 = new Player("Weber", 'X', 2);
+			this.player1 = new Player(Game.namePlayer1, 'O', 2);
+			this.player2 = new Player(Game.namePlayer2, 'X', 2);
 
 			/*** Faço um texto de introdução explicativo ***/
 			System.out.println("Bem vindx ao modo de jogo humano contra humano (:");
@@ -68,7 +72,7 @@ public class Game {
 			this.board.resetBoard();
 			
 			/*** Seto as características dos jogadores ***/
-			this.player1 = new Player("Thiago", 'O');
+			this.player1 = new Player(Game.namePlayer1, 'O');
 			this.player2 = new Player("Adalberto", 'X');
 
 			/*** Faço um texto de introdução explicativo ***/

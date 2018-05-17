@@ -1,22 +1,34 @@
 package com.reversi;
 
+import java.awt.EventQueue;
+
+import com.ui.Menu;
+
 public class Main {
 	/***************************** ATRIBUTOS *****************************/
-	private Game game = new Game();
+	/*** Variáveis estáticas para linkar com a interface ***/
+	public static Game game = new Game();
+	public static int gameType = -1;
 
 	/***************************** MAINZAO DA MASSA *****************************/
 	public static void main(String[] args) {
-		Game game = new Game();
+		
+		/*** Crio a tela de Menu ***/
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Menu window = new Menu();
+					window.menuFrame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		
 		/*** Parametro 0 - Humano x Humano ***/
 		/*** Parametro 1 - Humano x IA ***/
-		game.startGame(1);
+		//game.startGame(1);
 	}
 	
 	/***************************** GET'N SET *****************************/
-	public Game getGame() {
-		return game;
-	}
-	public void setGame(Game game) {
-		this.game = game;
-	}
 }
