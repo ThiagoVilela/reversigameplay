@@ -125,6 +125,8 @@ public class HumanPC {
 				else{
 					sucessoNomesLabel.setBounds(523, 208, 0, 14);
 					Game.namePlayer1 = nomePlayer1Field.getText();
+					Game.playerPlaying = 1;
+					
 					Game.board.resetBoard();
 					
 					/*** Seto as características dos jogadores ***/
