@@ -132,6 +132,10 @@ public class HumanPC {
 					/*** Seto as características dos jogadores ***/
 					Game.player1 = new Player(Game.namePlayer1, 'O', 2);
 					Game.player2 = new Player("Adalberto", 'X', 2);
+					
+					HumanIAScreen window = new HumanIAScreen();
+					window.humanIAScreenFrame.setVisible(true);
+					humanPCFrame.dispose();
 				}
 			}
 		});

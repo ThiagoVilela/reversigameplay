@@ -77,8 +77,8 @@ public class NewGame {
 		JButton humaPCButton = new JButton("Humano X Computador");
 		humaPCButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				HumanHuman window = new HumanHuman();
-				window.humanHumanFrame.setVisible(true);
+				HumanPC window = new HumanPC();
+				window.humanPCFrame.setVisible(true);
 				newGameFrame.dispose();
 				Main.gameType = 1;
 			}

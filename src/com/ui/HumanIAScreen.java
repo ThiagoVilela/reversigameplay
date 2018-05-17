@@ -31,7 +31,7 @@ public class HumanIAScreen {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					HumanGameScreen window = new HumanGameScreen();
+					HumanIAScreen window = new HumanIAScreen();
 					window.humanIAScreenFrame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -117,7 +117,30 @@ public class HumanIAScreen {
 			transitions = Game.board.findPlayableCells(Game.board.getCell(), Game.player2.getPiece(), Game.player1.getPiece());
 
 		} else if (Game.playerPlaying == 2) {
-			transitions = Game.board.findPlayableCells(Game.board.getCell(), Game.player1.getPiece(), Game.player2.getPiece());
+			/*** Consigo a árvore de jogadas preenchida ***/
+			MinMaxNode minMaxTree = Game.minMax(Game.player2.getPiece(), Game.player1.getPiece(), Game.player2.getName());
+			/*** Identificar o bestMove da árvore montada ***/
+			System.out.println("VOU ENTRAR NA AIPLAYS!");
+			Transition bestMove = Game.findBestMoveRoot(minMaxTree);
+
+			/*** TO DO - Realizar a jogada ***/
+			if (bestMove.initial.get(0).x >= 0 && bestMove.initial.get(0).y >= 0) {
+				/*** Executo a jogada informada pelo jogador ***/
+				ArrayList<Transition> transitions2 = Game.board.findPlayableCells(Game.board.getCell(), Game.player1.getPiece(), Game.player2.getPiece());
+				System.out.println("Turno dx " + Game.player2.getName());
+				Game.board.setCell(Game.board.protectedInsertItem(bestMove.initial.get(0).x, bestMove.initial.get(0).y, Game.player2.getPiece(), Game.player2.getName(), transitions2, Game.board.getCell()));
+			
+				Game.playerPlaying--;
+
+				HumanIAScreen window = new HumanIAScreen();
+				window.humanIAScreenFrame.setVisible(true);
+				humanIAScreenFrame.dispose();
+			}
+
+			else {
+				//Aqui tem de exibir um label de erro
+				System.out.println("ERRO IA JOGANDO");
+			}
 
 		} else {
 			System.err.println("ERRO AO IDENTIFICAR JOGADOR JOGANDO");
@@ -199,7 +222,7 @@ public class HumanIAScreen {
 								if (!newBoard.isBoardEqualAnotherBoard(newBoard.getCell(), Game.board.getCell())) {
 									Game.playerPlaying++;
 
-									HumanGameScreen window = new HumanGameScreen();
+									HumanIAScreen window = new HumanIAScreen();
 									window.humanIAScreenFrame.setVisible(true);
 									humanIAScreenFrame.dispose();
 								}
@@ -210,8 +233,6 @@ public class HumanIAScreen {
 
 
 							} else if (Game.playerPlaying == 2) {
-								ArrayList<Transition> transitions = Game.board.findPlayableCells(Game.board.getCell(), Game.player1.getPiece(), Game.player2.getPiece());
-
 								/*** Consigo a árvore de jogadas preenchida ***/
 								MinMaxNode minMaxTree = Game.minMax(Game.player2.getPiece(), Game.player1.getPiece(), Game.player2.getName());
 								/*** Identificar o bestMove da árvore montada ***/
@@ -221,30 +242,22 @@ public class HumanIAScreen {
 								/*** TO DO - Realizar a jogada ***/
 								if (bestMove.initial.get(0).x >= 0 && bestMove.initial.get(0).y >= 0) {
 									/*** Executo a jogada informada pelo jogador ***/
-									ArrayList<Transition> transitions = this.board.findPlayableCells(this.board.getCell(), enemyCell, alliedCell);
-									System.out.println("Turno dx " + playerName);
-									Game.board.setCell(this.board.protectedInsertItem(bestMove.initial.get(0).x, bestMove.initial.get(0).y, alliedCell, playerName, transitions, this.board.getCell()));
+									ArrayList<Transition> transitions2 = Game.board.findPlayableCells(Game.board.getCell(), Game.player1.getPiece(), Game.player2.getPiece());
+									System.out.println("Turno dx " + Game.player2.getName());
+									Game.board.setCell(Game.board.protectedInsertItem(bestMove.initial.get(0).x, bestMove.initial.get(0).y, Game.player2.getPiece(), Game.player2.getName(), transitions2, Game.board.getCell()));
+								
+									Game.playerPlaying--;
+
+									HumanIAScreen window = new HumanIAScreen();
+									window.humanIAScreenFrame.setVisible(true);
+									humanIAScreenFrame.dispose();
 								}
-
-								else {
-									System.out.println("Erro ao identificar a jogada selecionada da IA ");
-								}
-
-
-								Game.board.setCell(Game.board.protectedInsertItem(linhas, colunas, Game.player2.getPiece(), Game.player2.getName(), transitions, Game.board.getCell()));
-
-				
-								Game.playerPlaying--;
-
-								HumanIAScreen window = new HumanIAScreen();
-								window.humanIAScreenFrame.setVisible(true);
-								humanIAScreenFrame.dispose();
-
 
 								else {
 									//Aqui tem de exibir um label de erro
+									System.out.println("ERRO IA JOGANDO");
 								}
-
+								
 							} else {
 								System.err.println("ERRO AO IDENTIFICAR JOGADOR JOGANDO");
 							}
