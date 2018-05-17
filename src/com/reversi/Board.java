@@ -694,14 +694,14 @@ public class Board {
 		//board.printPlayableCells(transitions, board.getCell());
 		
 		board.printPlayableDetails(transitions, board.getCell());
-		Game game = new Game();
-		game.alphaBeta(transitions);
+		/*Game game = new Game();
+		//game.alphaBeta(transitions);
 		
 		/*board.setCell(board.protectedInsertItem(1, 1, 'O', "Humano", transitions, board.getCell()));
 		board.setCell(board.protectedInsertItem(7, 5, 'O', "Humano", transitions, board.getCell()));
 		board.setCell(board.protectedInsertItem(6, 6, 'O', "Humano", transitions, board.getCell()));*/
 		
-		game.getBoard().resetBoard();
+		/*game.getBoard().resetBoard();
 		//board.setCell(board.protectedInsertItem(2, 4, 'O', "Humano",transitions, board.getCell()));
 		game.getBoard().setCell(board.getCell());
 		game.getBoard().printBoard(game.getBoard().getCell());
@@ -719,6 +719,6 @@ public class Board {
 		
 		//board.setCell(board.protectedInsertItem(7, 7, 'O', "Humano", transitions, board.getCell()));
 		//board.printBoard(board.getCell());
-		
+		*/
 	}
 }

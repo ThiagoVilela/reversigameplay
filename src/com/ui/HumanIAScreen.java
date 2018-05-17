@@ -23,6 +23,7 @@ public class HumanIAScreen {
 	private JTextField jogadaLinhaField;
 	private JTextField jogadaColunaField;
 	protected Object frame;
+	public static boolean wrongPlay = false;
 
 	/**
 	 * Launch the application.
@@ -60,6 +61,29 @@ public class HumanIAScreen {
 
 		int paddingLeft = 220;
 		int paddingTop = 55;
+
+		if (Game.playerPlaying == 2 && !wrongPlay) {
+			/*** Consigo a árvore de jogadas preenchida ***/
+			MinMaxNode minMaxTree = Game.minMax(Game.player2.getPiece(), Game.player1.getPiece(), Game.player2.getName());
+			/*** Identificar o bestMove da árvore montada ***/
+			System.out.println("VOU ENTRAR NA AIPLAYS!");
+			Transition bestMove = Game.findBestMoveRoot(minMaxTree);
+
+			/*** TO DO - Realizar a jogada ***/
+			if (bestMove.initial.get(0).x >= 0 && bestMove.initial.get(0).y >= 0) {
+				/*** Executo a jogada informada pelo jogador ***/
+				ArrayList<Transition> transitions2 = Game.board.findPlayableCells(Game.board.getCell(), Game.player1.getPiece(), Game.player2.getPiece());
+				System.out.println("Turno dx " + Game.player2.getName());
+				Game.board.setCell(Game.board.protectedInsertItem(bestMove.initial.get(0).x, bestMove.initial.get(0).y, Game.player2.getPiece(), Game.player2.getName(), transitions2, Game.board.getCell()));
+
+				Game.playerPlaying--;
+			}
+
+			else {
+				//Aqui tem de exibir um label de erro
+				System.out.println("ERRO IA JOGANDO");
+			}
+		}
 
 		/*** INICIO - Impressão do tabuleiro ***/
 		JLabel lblMatrizTop = new JLabel(Game.board.saveStringBoard(Game.board.getCell()));
@@ -108,41 +132,12 @@ public class HumanIAScreen {
 		humanIAScreenFrame.getContentPane().add(lblMatriz7);
 		/*** FIM - Impressão do tabuleiro ***/
 
-
-
-
 		/*** Imprimir possíveis jogadas na tela ***/
 		ArrayList<Transition> transitions = new ArrayList<Transition>();
 		if (Game.playerPlaying == 1) {
 			transitions = Game.board.findPlayableCells(Game.board.getCell(), Game.player2.getPiece(), Game.player1.getPiece());
 
-		} else if (Game.playerPlaying == 2) {
-			/*** Consigo a árvore de jogadas preenchida ***/
-			MinMaxNode minMaxTree = Game.minMax(Game.player2.getPiece(), Game.player1.getPiece(), Game.player2.getName());
-			/*** Identificar o bestMove da árvore montada ***/
-			System.out.println("VOU ENTRAR NA AIPLAYS!");
-			Transition bestMove = Game.findBestMoveRoot(minMaxTree);
-
-			/*** TO DO - Realizar a jogada ***/
-			if (bestMove.initial.get(0).x >= 0 && bestMove.initial.get(0).y >= 0) {
-				/*** Executo a jogada informada pelo jogador ***/
-				ArrayList<Transition> transitions2 = Game.board.findPlayableCells(Game.board.getCell(), Game.player1.getPiece(), Game.player2.getPiece());
-				System.out.println("Turno dx " + Game.player2.getName());
-				Game.board.setCell(Game.board.protectedInsertItem(bestMove.initial.get(0).x, bestMove.initial.get(0).y, Game.player2.getPiece(), Game.player2.getName(), transitions2, Game.board.getCell()));
-			
-				Game.playerPlaying--;
-
-				HumanIAScreen window = new HumanIAScreen();
-				window.humanIAScreenFrame.setVisible(true);
-				humanIAScreenFrame.dispose();
-			}
-
-			else {
-				//Aqui tem de exibir um label de erro
-				System.out.println("ERRO IA JOGANDO");
-			}
-
-		} else {
+		}else {
 			System.err.println("ERRO AO IDENTIFICAR JOGADOR JOGANDO");
 		}
 
@@ -228,39 +223,19 @@ public class HumanIAScreen {
 								}
 
 								else {
+									wrongPlay = true;
 									//Aqui tem de exibir um label de erro
 								}
 
 
-							} else if (Game.playerPlaying == 2) {
-								/*** Consigo a árvore de jogadas preenchida ***/
-								MinMaxNode minMaxTree = Game.minMax(Game.player2.getPiece(), Game.player1.getPiece(), Game.player2.getName());
-								/*** Identificar o bestMove da árvore montada ***/
-								System.out.println("VOU ENTRAR NA AIPLAYS!");
-								Transition bestMove = Game.findBestMoveRoot(minMaxTree);
-
-								/*** TO DO - Realizar a jogada ***/
-								if (bestMove.initial.get(0).x >= 0 && bestMove.initial.get(0).y >= 0) {
-									/*** Executo a jogada informada pelo jogador ***/
-									ArrayList<Transition> transitions2 = Game.board.findPlayableCells(Game.board.getCell(), Game.player1.getPiece(), Game.player2.getPiece());
-									System.out.println("Turno dx " + Game.player2.getName());
-									Game.board.setCell(Game.board.protectedInsertItem(bestMove.initial.get(0).x, bestMove.initial.get(0).y, Game.player2.getPiece(), Game.player2.getName(), transitions2, Game.board.getCell()));
-								
-									Game.playerPlaying--;
-
-									HumanIAScreen window = new HumanIAScreen();
-									window.humanIAScreenFrame.setVisible(true);
-									humanIAScreenFrame.dispose();
-								}
-
-								else {
-									//Aqui tem de exibir um label de erro
-									System.out.println("ERRO IA JOGANDO");
-								}
-								
-							} else {
-								System.err.println("ERRO AO IDENTIFICAR JOGADOR JOGANDO");
 							}
+							else {
+								//Aqui tem de exibir um label de erro
+								System.out.println("ERRO IA JOGANDO");
+							}
+
+						} else {
+							System.err.println("ERRO AO IDENTIFICAR JOGADOR JOGANDO");
 						}
 					}
 				}
@@ -282,5 +257,5 @@ public class HumanIAScreen {
 		});
 		button.setBounds(535, 454, 213, 23);
 		humanIAScreenFrame.getContentPane().add(button);
-	}
+}
 }
