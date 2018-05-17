@@ -77,7 +77,7 @@ public class HumanPC {
 		
 		rbnMedio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Game.LEVEL = 3;
+				Game.LEVEL = 2;
 				rbnFacil.setSelected(false);
 				rbnDificil.setSelected(false);
 
@@ -89,7 +89,7 @@ public class HumanPC {
 		
 		rbnDificil.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Game.LEVEL = 6;
+				Game.LEVEL = 3;
 				rbnFacil.setSelected(false);
 				rbnMedio.setSelected(false);
 			}

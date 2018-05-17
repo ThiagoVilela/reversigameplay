@@ -26,10 +26,6 @@ public class HumanIAScreen {
 	public static boolean iaWillPlay = false;
 
 	private JLabel erroBoardCheioLabel = new JLabel("Tabuleiro Cheio");
-	private JLabel erroJogadaInvalidaLabel = new JLabel("Valor Digitado não é uma possível jogada válida");
-	private JLabel erroValorDigitado = new JLabel("Valor Digitado não é uma possível jogada válida");
-	private JLabel score1Label;
-	private JLabel score2Label;
 
 	/**
 	 * Launch the application.
