@@ -1,0 +1,170 @@
+package com.ui;
+
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+
+import com.reversi.Game;
+
+import java.awt.Font;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+public class HumanGameScreen {
+
+	public JFrame humanGameScreenFrame;
+	private JTextField jogadaLinhaField;
+	private JTextField jogadaColunaField;
+	protected Object frame;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					HumanGameScreen window = new HumanGameScreen();
+					window.humanGameScreenFrame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the application.
+	 */
+	public HumanGameScreen() {
+		initialize();
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+		humanGameScreenFrame = new JFrame();
+		humanGameScreenFrame.setFont(new Font("Constantia", Font.PLAIN, 12));
+		humanGameScreenFrame.setTitle("Vez de " + Game.namePlayer1 + " jogar ");
+		humanGameScreenFrame.setBounds(100, 100, 802, 573);
+		humanGameScreenFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		humanGameScreenFrame.getContentPane().setLayout(null);
+		
+		int paddingLeft = 220;
+		int paddingTop = 55;
+		
+		/*** INICIO - Impressão do tabuleiro ***/
+		JLabel lblMatrizTop = new JLabel(Game.board.saveStringBoard(Game.board.getCell()));
+		lblMatrizTop.setFont(new Font("Tahoma", Font.PLAIN, 19));
+		lblMatrizTop.setBounds(paddingLeft, paddingTop, 550, 100);
+		humanGameScreenFrame.getContentPane().add(lblMatrizTop);
+		
+		JLabel lblMatriz0 = new JLabel(Game.board.saveStringBoard2(0,Game.board.getCell()));
+		lblMatriz0.setFont(new Font("Tahoma", Font.PLAIN, 19));
+		lblMatriz0.setBounds(paddingLeft, paddingTop+20, 550, 100);
+		humanGameScreenFrame.getContentPane().add(lblMatriz0);
+		
+		JLabel lblMatriz1 = new JLabel(Game.board.saveStringBoard2(1,Game.board.getCell()));
+		lblMatriz1.setFont(new Font("Tahoma", Font.PLAIN, 19));
+		lblMatriz1.setBounds(paddingLeft, paddingTop+40, 550, 100);
+		humanGameScreenFrame.getContentPane().add(lblMatriz1);
+		
+		JLabel lblMatriz2 = new JLabel(Game.board.saveStringBoard2(2,Game.board.getCell()));
+		lblMatriz2.setFont(new Font("Tahoma", Font.PLAIN, 19));
+		lblMatriz2.setBounds(paddingLeft, paddingTop+60, 550, 100);
+		humanGameScreenFrame.getContentPane().add(lblMatriz2);
+		
+		JLabel lblMatriz3 = new JLabel(Game.board.saveStringBoard2(3,Game.board.getCell()));
+		lblMatriz3.setFont(new Font("Tahoma", Font.PLAIN, 19));
+		lblMatriz3.setBounds(paddingLeft, paddingTop+80, 550, 100);
+		humanGameScreenFrame.getContentPane().add(lblMatriz3);
+		
+		JLabel lblMatriz4 = new JLabel(Game.board.saveStringBoard2(4,Game.board.getCell()));
+		lblMatriz4.setFont(new Font("Tahoma", Font.PLAIN, 19));
+		lblMatriz4.setBounds(paddingLeft, paddingTop+100, 550, 100);
+		humanGameScreenFrame.getContentPane().add(lblMatriz4);
+		
+		JLabel lblMatriz5 = new JLabel(Game.board.saveStringBoard2(5,Game.board.getCell()));
+		lblMatriz5.setFont(new Font("Tahoma", Font.PLAIN, 19));
+		lblMatriz5.setBounds(paddingLeft, paddingTop+120, 550, 100);
+		humanGameScreenFrame.getContentPane().add(lblMatriz5);
+		
+		JLabel lblMatriz6 = new JLabel(Game.board.saveStringBoard2(6,Game.board.getCell()));
+		lblMatriz6.setFont(new Font("Tahoma", Font.PLAIN, 19));
+		lblMatriz6.setBounds(paddingLeft, paddingTop+140, 550, 100);
+		humanGameScreenFrame.getContentPane().add(lblMatriz6);
+		
+		JLabel lblMatriz7 = new JLabel(Game.board.saveStringBoard2(7,Game.board.getCell()));
+		lblMatriz7.setFont(new Font("Tahoma", Font.PLAIN, 19));
+		lblMatriz7.setBounds(paddingLeft, paddingTop+160, 550, 100);
+		humanGameScreenFrame.getContentPane().add(lblMatriz7);
+		/*** FIM - Impressão do tabuleiro ***/
+		
+		
+		
+		
+		/*** Campo para linha ***/
+		jogadaLinhaField = new JTextField();
+		jogadaLinhaField.setBounds(100, 400, 242, 20);
+		humanGameScreenFrame.getContentPane().add(jogadaLinhaField);
+		jogadaLinhaField.setColumns(10);
+
+		JLabel jogadaLinhaLabel = new JLabel("Linha:");
+		jogadaLinhaLabel.setBounds(100, 380, 100, 14);
+		humanGameScreenFrame.getContentPane().add(jogadaLinhaLabel);
+		
+		
+		
+		
+		/*** Campo para coluna ***/
+		jogadaColunaField = new JTextField();
+		jogadaColunaField.setBounds(450, 400, 242, 20);
+		humanGameScreenFrame.getContentPane().add(jogadaColunaField);
+		jogadaColunaField.setColumns(10);
+
+		JLabel nomePlayer2Label = new JLabel("Coluna:");
+		nomePlayer2Label.setBounds(450, 380, 100, 14);
+		humanGameScreenFrame.getContentPane().add(nomePlayer2Label);
+		
+		
+		
+		/*** Campo para jogar ***/
+		JButton playButton = new JButton("Jogar");
+		JLabel sucessoNomesLabel = new JLabel("Jogada efetuada com sucesso");
+		sucessoNomesLabel.setBounds(100, 454, 0, 14);
+		humanGameScreenFrame.getContentPane().add(sucessoNomesLabel);
+		playButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				if(jogadaLinhaField.getText().equals("") || jogadaColunaField.getText().equals("") ){
+					sucessoNomesLabel.setText("Preencha todos os campos para jogar.");
+					sucessoNomesLabel.setBounds(523, 208, 180, 14);
+				} 
+
+				else{
+					sucessoNomesLabel.setBounds(523, 208, 0, 14);
+				}
+			}
+		});
+		playButton.setBounds(101, 454, 89, 23);
+		humanGameScreenFrame.getContentPane().add(playButton);
+		
+		
+		
+		/*** Botão para cancelar ***/
+		JButton button = new JButton("Cancelar jogo");
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				NewGame window = new NewGame();
+				window.newGameFrame.setVisible(true);
+				humanGameScreenFrame.dispose();
+			}
+		});
+		button.setBounds(535, 454, 213, 23);
+		humanGameScreenFrame.getContentPane().add(button);
+	}
+}

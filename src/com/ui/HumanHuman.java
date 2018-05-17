@@ -104,6 +104,12 @@ public class HumanHuman {
 
 					Game.namePlayer1 = nomePlayer1Field.getText();
 					Game.namePlayer2 = nomePlayer2Field.getText();
+					
+					Game.board.resetBoard();
+					
+					HumanGameScreen window = new HumanGameScreen();
+					window.humanGameScreenFrame.setVisible(true);
+					humanHumanFrame.dispose();
 				}
 			}
 		});

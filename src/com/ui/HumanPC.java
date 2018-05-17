@@ -124,12 +124,12 @@ public class HumanPC {
 				else{
 					sucessoNomesLabel.setBounds(523, 208, 0, 14);
 					Game.namePlayer1 = nomePlayer1Field.getText();
+					Game.board.resetBoard();
 				}
 			}
 		});
 		addBotao.setBounds(350, 379, 89, 23);
 		humanPCFrame.getContentPane().add(addBotao);
-		
 		
 		JButton button = new JButton("Voltar para menu principal");
 		button.addActionListener(new ActionListener() {

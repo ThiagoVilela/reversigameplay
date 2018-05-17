@@ -5,9 +5,9 @@ import java.util.Scanner;
 
 public class Game {
 	/***************************** ATRIBUTOS *****************************/
-	private Board board = new Board();
-	private Player player1;
-	private Player player2;
+	public static Board board = new Board();
+	private static Player player1;
+	private static Player player2;
 	
 	/*** Variáveis estáticas para linkar com a interface ***/
 	public static int LEVEL = 1;
@@ -21,15 +21,15 @@ public class Game {
 		/*** Opção Human x Human ***/
 		if (configuration == 0) {
 			/*** Reseto o tabuleiro ***/
-			this.board.resetBoard();
+			Game.board.resetBoard();
 			
 			/*** Seto as características dos jogadores ***/
-			this.player1 = new Player(Game.namePlayer1, 'O', 2);
-			this.player2 = new Player(Game.namePlayer2, 'X', 2);
+			Game.player1 = new Player(Game.namePlayer1, 'O', 2);
+			Game.player2 = new Player(Game.namePlayer2, 'X', 2);
 
 			/*** Faço um texto de introdução explicativo ***/
 			System.out.println("Bem vindx ao modo de jogo humano contra humano (:");
-			System.out.println(player1.getName() + " será as peças O e " + player2.getName() + " será as peças X");
+			System.out.println(Game.player1.getName() + " será as peças O e " + Game.player2.getName() + " será as peças X");
 			System.out.println("Boa sorte!");
 
 			/*** Apresento o tabuleiro com as possíveis jogadas para o jogador ***/
@@ -710,19 +710,19 @@ public class Game {
 		return board;
 	}
 	public void setBoard(Board board) {
-		this.board = board;
+		Game.board = board;
 	}
 	public Player getPlayer1() {
 		return player1;
 	}
 	public void setPlayer1(Player player1) {
-		this.player1 = player1;
+		Game.player1 = player1;
 	}
 	public Player getPlayer2() {
 		return player2;
 	}
 	public void setPlayer2(Player player2) {
-		this.player2 = player2;
+		Game.player2 = player2;
 	}
 
 

@@ -518,6 +518,37 @@ public class Board {
 			System.out.println();
 		}
 	}
+	
+	/*** Método Salvar o tabuleiro em String ***/
+	public String saveStringBoard(Cell[][] board) {
+		StringBuffer boardContent = new StringBuffer();
+		/**** Topo da tabela ****/
+		for (int i = 0; i < board.length; i++) {
+			if (i == 0)
+				boardContent.append("    ");
+
+			boardContent.append("_"+ i +"_ ");
+
+			if (i == board.length-1)
+				boardContent.append("\n");
+		}
+		
+		return boardContent.toString();
+	}
+	
+	/*** Método Salvar o tabuleiro em String ***/
+	public String saveStringBoard2(int line, Cell[][] board) {
+		StringBuffer boardContent = new StringBuffer();
+
+		/**** Imprime o resto da tabela ****/
+		for (int j = 0; j < board[line].length; j++) {
+			if (j == 0) {boardContent.append(line + " |_" + board[line][j].content + "_|");}
+			else {boardContent.append("_" + board[line][j].content + "_|");}
+		}
+		boardContent.append("\n");
+		
+		return boardContent.toString();
+	}
 
 	/*** "Limpa" a tela ***/
 	public void screenClear(){
