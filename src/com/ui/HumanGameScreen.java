@@ -185,6 +185,12 @@ public class HumanGameScreen {
 			lblPossiblePlays.setBounds(100, 250, 550, 150);
 			humanGameScreenFrame.getContentPane().add(lblPossiblePlays);		
 		}
+		else if(transitions.size() > 7) {
+			JLabel lblPossiblePlays = new JLabel(Game.board.savePlayableCells(transitions, Game.board.getCell()));
+			lblPossiblePlays.setFont(new Font("Tahoma", Font.PLAIN, 7));
+			lblPossiblePlays.setBounds(100, 250, 550, 150);
+			humanGameScreenFrame.getContentPane().add(lblPossiblePlays);		
+		}
 		/*** FIM - Imprimir possíveis jogadas na tela ***/
 
 

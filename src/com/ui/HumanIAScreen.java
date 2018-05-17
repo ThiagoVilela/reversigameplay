@@ -128,7 +128,7 @@ public class HumanIAScreen {
 
 		JLabel scoreTitle2 = new JLabel("Score PC");
 		scoreTitle2.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		scoreTitle2.setBounds(400, 0, 100, 47);
+		scoreTitle2.setBounds(410, 0, 100, 47);
 		humanIAScreenFrame.getContentPane().add(scoreTitle2);
 
 		String scoreString2 = scoreArray[1] + "";
@@ -206,6 +206,12 @@ public class HumanIAScreen {
 		else if((transitions.size() > 4) && (transitions.size() < 7) ) {
 			JLabel lblPossiblePlays = new JLabel(Game.board.savePlayableCells(transitions, Game.board.getCell()));
 			lblPossiblePlays.setFont(new Font("Tahoma", Font.PLAIN, 9));
+			lblPossiblePlays.setBounds(100, 250, 550, 150);
+			humanIAScreenFrame.getContentPane().add(lblPossiblePlays);		
+		}
+		else if(transitions.size() > 7) {
+			JLabel lblPossiblePlays = new JLabel(Game.board.savePlayableCells(transitions, Game.board.getCell()));
+			lblPossiblePlays.setFont(new Font("Tahoma", Font.PLAIN, 7));
 			lblPossiblePlays.setBounds(100, 250, 550, 150);
 			humanIAScreenFrame.getContentPane().add(lblPossiblePlays);		
 		}
